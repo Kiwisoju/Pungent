@@ -5,3 +5,49 @@
 {
     box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);
 }
+
+/* Styles for the navigation bar, adding in the dropdown menus */
+
+
+  #nav > a
+  {
+    display: none;
+  }
+
+  #nav li
+  {
+    position: relative;
+  }
+    #nav li a
+    {
+
+      display: block;
+    }
+    #nav li a:active
+    {
+      background-color: #ddd !important;
+    }
+
+    /* second level */
+
+    #nav li ul
+    {
+      display: none;
+    }
+      #nav li:hover ul
+      {
+        display: block;
+        left: 0;
+        right: 0;
+      }
+
+/* third level */
+#third-dropdown{
+  display: none;
+}
+  #nav li ul li:hover #third-dropdown
+  {
+    display: block;
+    left: 0;
+    right: 0;
+  }

@@ -7,10 +7,8 @@ p{
 /*Initial things*/
 .content, .page-content{
   max-width:960px;
-<<<<<<< HEAD
   width:100%;
-=======
->>>>>>> FETCH_HEAD
+
 }
 
 .page-content div{
@@ -80,13 +78,10 @@ nav hr {
   float: none;
   vertical-align: top;
 }
-<<<<<<< HEAD
 ul{
   list-style:none;
 }
-=======
 
->>>>>>> FETCH_HEAD
 .navbar{
   text-align: center;
 }
@@ -134,10 +129,10 @@ ul{
   color:gray;
   text-decoration:none;
 }
-/* Pun text styles */
+/* Pun text styles
 .pun-date{
-  margin-bottom:
-}
+  margin-bottom:;
+} */
 .pun-text{
 display:inline-block;
 float:left;
