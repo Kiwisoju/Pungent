@@ -1,0 +1,7 @@
+/*==================================================
+ * Drop shadow for the header/navigation
+ * ===============================================*/
+.header-dropshadow
+{
+    box-shadow:0 3px 7px rgba(0, 0, 0, 0.3);
+}
