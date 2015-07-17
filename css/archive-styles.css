@@ -1,0 +1,21 @@
+/*Active tab on the navigation bars - Footer and Header */
+.active{
+    background-color:#D5D5D5;
+}
+
+.active-footer{
+    background-color:#525252;
+}
+
+/*Search bar styles */
+#search-bar{
+  margin-top:25px;
+}
+
+/* Table font sizes */
+
+table td, table th{
+  font-size:16px;
+  font-family:'Open Sans', sans-serif;
+}
+

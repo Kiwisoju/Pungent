@@ -7,11 +7,11 @@
     <meta name="description" content="">
     <meta name="Glenn Forrest" content="">
 
-    <title>Pungent</title>
-   
+    <title>Pungent - Topic</title>
+
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="images/favicon.png"/>
-    
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
@@ -21,7 +21,7 @@
     <!-- Custom CSS -->
     <link href='//fonts.googleapis.com/css?family=Arizonia|Open+Sans' rel='stylesheet' type='text/css'>
     <link href="css/main.css" rel="stylesheet" type="text/css">
-    <link href="css/index-styles.css" rel="stylesheet" type="text/css">
+    <link href="css/topic-styles.css" rel="stylesheet" type="text/css">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -49,7 +49,7 @@
                 <ul class="nav navbar-nav">
                   <li><a href="challenges.html"  aria-haspopup="true"><span>Challenges</span></a>
               			<ul class="dropdown navbar-nav nav">
-              				<li><a href="topic.html" aria-haspopup="true"><span>Topic</span></a>
+              				<li class="active"><a href="topic.html" aria-haspopup="true"><span>Topic</span></a>
                         <ul class="dropdown navbar-nav nav">
                           <li id="third-dropdown"><a href="topic-archive.html">Archive</a></li>
                         </ul>
@@ -75,105 +75,34 @@
 
     <!-- Page Content -->
     <div class="container page-content text-center">
-      <div class="pun-of-the-day">
-        <h2>Pun of the day</h2>
-        <p>I'm reading a book about gravity<br>It's impossible to put down.</p>
-      </div>
-      <hr class="hr-fade">
       <div class="topic challenge">
         <h2><a href="?topic-challenge3">Topic Challenge #3 <br>Trees</a></h2>
-        <div class="pun-post">
-            <p class="pun-date pull-left">26/06/2015</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">+31</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="?username-profile">Username</a></p>
-        </div>
-        <div class="pun-post">
-            <p class="pun-date pull-left">26/06/2015</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">+31</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="?username-profile">Username</a></p>
-        </div>
-        <div class="pun-post">
-            <p class="pun-date pull-left">26/06/2015</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">+31</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="?username-profile">Username</a></p>
-        </div>
+        <a href="?previoustopic"><i class="fa fa-chevron-left pull-left fa-2"></i></a>
+        <a href="?anothertopic"><i class="fa fa-chevron-right pull-right fa-2"></i></a>
         <form class="pun-input">
           <div class="form-group">
               <input type="text" class="form-control text-center" placeholder="Post your pun here"></input>
           </div>
            <button type="submit" class="btn btn-default">Submit</button>
         </form>
+        
+        <hr class="hr-fade">
+        
+         <div class="pun-post">
+            <p class="pun-date pull-left">26/06/2015</p>
+            <div class="pun-inner row">
+              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
+              <div class="rating-group">
+                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
+                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
+                <a href="#" class="rating-number">+31</a>
+              </div>          
+            </div>
+            <p class="username pull-right"><a href="?username-profile">Username</a></p>
+        </div>
       </div>
-      <hr class="hr-fade">
-      <div class="image challenge">
-        <h2><a href="?image-challenge3">Image Challenge #3</a></h2>
-        <img class="grayscale img-responsive" src="images/image-challenge-2.jpg"/>
-      <div class="pun-post">
-            <p class="pun-date pull-left">26/06/2015</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">+31</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="?username-profile">Username</a></p>
-        </div>
-        <div class="pun-post">
-            <p class="pun-date pull-left">26/06/2015</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">+31</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="?username-profile">Username</a></p>
-        </div>
-        <div class="pun-post">
-            <p class="pun-date pull-left">26/06/2015</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">+31</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="?username-profile">Username</a></p>
-        </div>
-        <form class="pun-input">
-          <div class="form-group">
-              <input type="text" class="form-control text-center" placeholder="Post your pun here"></input>
-          </div>
-           <button type="submit" class="btn btn-default">Submit</button>
-        </form>
-      
-      </div>
-        <!-- Footer -->
+          
+         <!-- Footer -->
         <footer>
             <ul class="nav navbar-nav">
                 <li>
@@ -196,7 +125,6 @@
             </div>
             <!-- /.row -->
         </footer>
-
     </div>
     <!-- /.container -->
 

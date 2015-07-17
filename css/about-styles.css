@@ -1,0 +1,14 @@
+/*Active tab on the navigation bars - Footer and Header */
+.active{
+    background-color:#D5D5D5;
+}
+
+.active-footer{
+    background-color:#525252;
+}
+
+/* Spacing styles for the About div container */
+
+#about-container{
+    padding-bottom:30px;
+}
