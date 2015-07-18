@@ -1,8 +1,8 @@
-input{
+#landing-page-container input{
   margin-bottom:15px;
 }
 
-button{
+#landing-page-container button{
   width:70%;
 }
 
