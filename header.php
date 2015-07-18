@@ -1,7 +1,8 @@
 <?php
  require_once('authenticator.php');
  $authenticator = new AuthenticatorHelper();
-
+ // Abstracting the custom stylesheets
+ $stylesheet = substr($_SERVER['PHP_SELF'], 0, -4);
 ?>
 <html>
 <head>
@@ -25,7 +26,7 @@
     <!-- Custom CSS -->
     <link href='//fonts.googleapis.com/css?family=Arizonia|Open+Sans' rel='stylesheet' type='text/css'>
     <link href="/css/main.css" rel="stylesheet" type="text/css">
-    <link href="/css/index-styles.css" rel="stylesheet" type="text/css">
+    <link href="/css<?=$stylesheet?>-styles.css" rel="stylesheet" type="text/css">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
