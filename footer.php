@@ -2,16 +2,16 @@
         <footer class="text-center">
             <ul class="nav navbar-nav">
                 <li>
-                    <a id="footer-links" href="challenge.html">Challenges</a>
+                    <a id="footer-links" href="admin.php?action=challenges">Challenges</a>
                 </li>
                 <li>
-                    <a id="footer-links" href="about.html">About</a>
+                    <a id="footer-links" href="admin.php?action=about">About</a>
                 </li>
                 <li>
-                    <a id="footer-links" href="profile.html">Profile</a>
+                    <a id="footer-links" href="admin.php?action=profile">Profile</a>
                 </li>
                 <li>
-                    <a id="footer-links" href="sitemap.html">Sitemap</a>
+                    <a id="footer-links" href="admin.php?action=sitemap">Sitemap</a>
                 </li>
             </ul>
             <div class="row">

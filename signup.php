@@ -15,7 +15,6 @@ $database = new DatabaseHelper();
     if($_POST){
     $database->insert('Users',$_POST,"Successfully added new user");
     $authenticator->login($_POST['username'], $_POST['password']);
-    header('Location: /home.php');    
     }
     
 ?>

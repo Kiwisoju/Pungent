@@ -44,7 +44,7 @@ class DatabaseHelper{
     if ($mysqli->connect_error) {
         die("Connection failed: " . $mysqli->connect_error);
     } 
-    echo "Connected successfully (".$mysqli->host_info.")";
+    // "Connected successfully (".$mysqli->host_info.")";
                 
   
     

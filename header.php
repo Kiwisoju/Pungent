@@ -86,24 +86,24 @@
 
             <hr class="left hr-fade">
                 <ul class="nav navbar-nav">
-                  <li><a href="challenges.html"  aria-haspopup="true"><span>Challenges</span></a>
+                  <li><a href="admin.php?action=challenges"  aria-haspopup="true"><span>Challenges</span></a>
               			<ul class="dropdown navbar-nav nav">
-              				<li><a href="topic.html" aria-haspopup="true"><span>Topic</span></a>
+              				<li><a href="admin.php?action=topic" aria-haspopup="true"><span>Topic</span></a>
                         <ul class="dropdown navbar-nav nav">
-                          <li id="third-dropdown"><a href="topic-archive.html">Archive</a></li>
+                          <li id="third-dropdown"><a href="admin.php?action=topic-archive">Archive</a></li>
                         </ul>
                       </li>
-                      <li><a href="image.html" aria-haspopup="true"><span>Image</span></a>
+                      <li><a href="admin.php?action=image-page" aria-haspopup="true"><span>Image</span></a>
                         <ul class="dropdown navbar-nav nav">
-                          <li id="third-dropdown"><a href="image-archive.html">Archive</a></li>
+                          <li id="third-dropdown"><a href="admin.php?action=image-archive">Archive</a></li>
                         </ul>
                       </li>
                     </ul>
               		</li>
-              		<li><a href="about.html">About</a></li>
-                  <li><a href="profile.html" aria-haspopup="true"><span>Profile</span></a>
+              		<li><a href="admin.php?action=about">About</a></li>
+                  <li><a href="admin.php?action=profile" aria-haspopup="true"><span>Profile</span></a>
                     <ul class="dropdown navbar-nav nav">
-                      <li><a href="index.php?logout=yes">Logout</a></li>
+                      <li><a href="?logout=yes">Logout</a></li>
                     </ul>
                   </li>
                 </ul>

@@ -9,6 +9,32 @@ switch($_GET['action']){
 	case'home':
 		header('Location: /home.php');
 		break;
+    case'challenges':
+		header('Location: /challenges.php');
+		break;
+	case'topic':
+		header('Location: /topic.php');
+		break;
+	case'topic-archive':
+		header('Location: /topic-archive.php');
+		break;
+	case'image-page':
+		header('Location: /image-page.php');
+		break;
+	case'image-archive':
+		header('Location: /image-archive.php');
+		break;
+	case'about':
+		header('Location: /about.php');
+		break;
+	case'profile':
+		header('Location: /profile.php');
+		break;
+	case'sitemap':
+		header('Location: /sitemap.php');
+		break;	
+		
+    
 }
 
 include('header.php');

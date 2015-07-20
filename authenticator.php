@@ -52,6 +52,7 @@ private $db;
 			if(password_verify($password, $result['password'])){
 				$_SESSION['username'] = $username;
 				$_SESSION['loggedIn'] = true;
+				header('Location: /home.php');
 			}else{
 				$result =  false;
 			}
