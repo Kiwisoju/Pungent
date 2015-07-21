@@ -33,7 +33,6 @@ class DatabaseHelper{
     $dbport = 3306;
 
     
-    
     if(!$password)
       throw new Exception('No password set for database');
     
@@ -162,6 +161,7 @@ while($row = $result->fetch_assoc()){
 }
   
     }
+    
   }
   # @TODO Document DatabaseHelper->queryRows()
   public function queryRows($sql = ''){

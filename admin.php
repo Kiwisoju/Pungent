@@ -3,7 +3,9 @@
 require_once('authenticator.php');
 //Secured content, redirect unauthenticated users
 $authenticator = new AuthenticatorHelper();
-$authenticator->redirectUnauthenticatedUser();
+if(!($authenticator->isAdmin() )){
+    header('Location: /home.php?not-admin=yes');
+}
 
 switch($_GET['action']){
 	case'home':
@@ -19,7 +21,7 @@ switch($_GET['action']){
 		header('Location: /topic-archive.php');
 		break;
 	case'image-page':
-		header('Location: /image-page.php');
+		header('Location: /image.php');
 		break;
 	case'image-archive':
 		header('Location: /image-archive.php');

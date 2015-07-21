@@ -2,16 +2,30 @@
 // Require security helpers
 require_once('authenticator.php');
 $authenticator = new AuthenticatorHelper();
+$database = new DatabaseHelper();
 // Secured content, redirect unauthenticated users
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
 include('header.php');
+
+
+/** pun of the day
+ * Will use the date function to check what the present
+ * date is, and pull the row where the date matches.
+ * Then return this and echo within the HTML */
+
 ?>
 <!-- Page Content -->
     <div class="container page-content text-center">
+      <?php if($_GET['not-admin']=='yes'):?>
+        <div class="popup header-dropshadow"><p>Sorry, you don't have permission to enter that page.</p> </div>
+      <?php endif; ?>
+      <?php if($_GET['loggedin']=='yes'):?>
+        <div class="popup"><p>Succesfully logged in.</p> </div>
+      <?php endif; ?>
       <div class="pun-of-the-day">
         <h2>Pun of the day</h2>
-        <p>I'm reading a book about gravity<br>It's impossible to put down.</p>
+        <p><?= $databaseQueries->punOfTheDay();?></p>
       </div>
       <hr class="hr-fade">
       <div class="topic challenge">

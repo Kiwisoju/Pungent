@@ -11,15 +11,12 @@ include('header.php');
     <div class="container page-content text-center">
         <div id="about-container">
           <h2>About</h2>
-          <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-          sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-          magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-          quis nostrud exerci tation ullamcorper suscipit lobortis nisl
-          ut aliquip ex ea commodo consequat. Duis autem vel eum iriure
-          dolor in hendrerit in vulputate velit esse molestie consequat,
-          vel illum dolore eu feugiat nulla facilisis at vero eros et
-          accumsan et iusto odio dignissim qui blandit praesent luptatum
-          zzril delenit augue duis dolore te feugait nulla facilisi.
+          <p>Pungent is a socially moderated pun competition.<br><br><br> What does that
+          mean? <br><br>It means that each week there will be a topic and image based
+          challenge for all users to post their puns. These will be rated
+          by your fellow punters and at the end of each week a winner will emerge!<br><br>
+          That's about it..
+          
           </p>
         </div>
 <?php

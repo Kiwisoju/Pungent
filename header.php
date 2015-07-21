@@ -1,8 +1,13 @@
 <?php
  require_once('authenticator.php');
+ require_once('database-queries.php');
  $authenticator = new AuthenticatorHelper();
+ $database = new DatabaseHelper();
+ $databaseQueries = new DatabaseQueries();
  // Abstracting the custom stylesheets
  $stylesheet = substr($_SERVER['PHP_SELF'], 0, -4);
+ 
+ 
 ?>
 <html>
 <head>
@@ -29,6 +34,7 @@
     <link href="/css<?=$stylesheet?>-styles.css" rel="stylesheet" type="text/css">
 
 
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -50,9 +56,9 @@
         <div id="signin-container">
             <form method="POST" action="<?= $_SERVER['PHP_SELF']?>">
                 <label for="inputEmail" class="sr-only">Username</label>
-                <input type="text" id="inputEmail" class="form-control input-lg" name="login[username]" placeholder="Username" required autofocus>
+                <input type="text" id="inputEmail" class="form-control input-lg" name="login[username]" placeholder="Username">
                 <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" class="form-control input-lg" name="login[password]" placeholder="Password" required>
+                <input type="password" id="inputPassword" class="form-control input-lg" name="login[password]" placeholder="Password">
                 <input type="submit" class="btn btn-md btn-primary btn-lg custom-button" name="signin" value="Sign In">
             </form>
         </div>
@@ -106,6 +112,7 @@
                       <li><a href="?logout=yes">Logout</a></li>
                     </ul>
                   </li>
+                  <?php if($authenticator->isAdmin() ): ?><li><a href="admin.php?action=admin">Admin</a></li><?php endif;?>
                 </ul>
             <hr class="right hr-fade">
     </nav>
