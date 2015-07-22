@@ -23,45 +23,30 @@ private $db;
      * the database.
      * @param array $formData Contains the username, passwords
      **/
-     
-     public function addUser(){
-      
-     // Creating an empty array to store error messages.
-        $errorMessage = [];
-        // Checking if username has been filled
-        if(empty($_POST['username']) ){
-            $errorMessage[] = "Please enter a username";
-            print_r($errorMessage);
-        
-        // Checking if password has been filled
-        }elseif(empty($_POST['password']) ){
-            $errorMessage[] = "Please enter a password";
-           print_r($errorMessage);
-        
-        // Checking if same password has been filled
-        }elseif(empty($_POST['password-match']) ){
-            $errorMessage[] = "Please enter your matching password";
-          print_r($errorMessage);
-        // Checking if passwords match
-        }elseif(!($_POST['password'] === $_POST['password-match']) ){
-            $errorMessage[] = "Your passwords do not match";
-            print_r($errorMessage);
+			public function addUser($formData){
+        // Checking if passwords match, if not set errormessage
+        // and redirect back to signup
+        if(!($formData['password'] === $formData['password-match']) ){
+            $errorMessage = "Your passwords do not match";
+            header( "Location: /signup.php?message=" . $errorMessage );
         }
-        $username = $_POST['username'];
-    if(!($this->db->queryRow("SELECT `username` FROM `users` Where `username` = '$username'") )){
-     // Unsetting the matching password so as to not insert it into the
-    // database.
-    unset($_POST['password-match']);    
-    
-    // Hash the password first. Need to remove this from the insert function
-    
-    // Inserting user to the database
-    $this->db->insert('users',$_POST,"Successfully added new user");
-    }else{
-     print("User already taken");
-    }    
-    
-    }
+		    //Getting the formData ready for insert. Removing matching
+		    //password, hashing password and inserting username
+		    
+		    unset($formData['password-match']);    
+        $formData['password']=password_hash($formData['password'], PASSWORD_DEFAULT );
+		    
+		    // Checking if username already exists, if not then insert to database, otherwise
+		    // redirect with error message.
+		    $username = $formData['username'];
+		    if(!($this->db->queryRow("SELECT `username` FROM `users` Where `username` = '$username'") )){
+					//Inserting user to the database and redirecting
+					header("Location: /index.php?message=" .$this->db->insert('users', $formData, "Successfully added new user")  );
+		    }else{
+		    	$errorMessage = "User already taken";
+          header( "Location: /signup.php?message=" . $errorMessage );
+		    }
+			}
       
       /**
        * Method to get all user properties
@@ -97,10 +82,22 @@ private $db;
     
     /**
      * Method to insert biography to the database
+     * @param string $data Text to be inserted into users table
      */
      
-    public function addBio(){
-     
+    public function addBio($data){
+    	$username = $_SESSION['username'];
+    	// Just need to prepare the $data['bio'] to take care of all the apostrophes
+    	// so that they don't end up escaping the sql..
+    	$sql = "UPDATE `users` SET `bio` = '".$data['bio']."' WHERE `username` = '$username'";
+			if( $this->db->update('users', $data, $sql) ){
+				// Need to look up how to add more than one action to the URL so that i can keep the user
+				// on their page as an editor, while displaying a success or error message. However for
+				// now it is updating the database.
+			header('Location: /profile.php?username=test&bio=yes');
+			}else{
+				header('Location: /profile.php?username=test&bio=no');
+			}
     }
     
     /**
@@ -129,10 +126,15 @@ private $db;
 			$data["username"] = $_SESSION['username'];
 			$data["rating"] = 0;
 			//Inserting data into the database
-			$this->db->insert($table, $data,"Pun succesfully posted");
-			//Redirect with successmessage
-			$section = substr($_SERVER['PHP_SELF'], 1);
-			header('Location: /'.$section.'?pun=yes');
+			if($this->db->insert($table, $data,"Pun succesfully posted") ){
+				//Redirect with successmessage
+				$section = substr($_SERVER['PHP_SELF'], 1);
+				header('Location: /'.$section.'?pun=yes');	
+				
+			}else{
+				return 'failed';
+			}
+			
     }
     
     /**

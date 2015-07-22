@@ -66,27 +66,65 @@ class DatabaseHelper{
    * @TODO Replace switch with default of 'manage-'.$table, if $redirect param not supplied
    */
   public function insert($table, $formData, $successMessage) {
-    
-    /* Hashing the password if within the $formData a password is present */
-    if($formData['password'])
-      {$formData['password']=password_hash($formData['password'], PASSWORD_DEFAULT );
-    }
+    $valuesStr = "";
+    $typesStr = "";
+    $bindParamArgs = array();
     
     foreach($formData as $key => $value){
       $values[] = $value;
       $keys[] = $key;
     }
     
+    if (count($values) != count($keys)) {
+      // error here
+    } 
     
-    $sql = "INSERT INTO `$table` (".implode(',',$keys).") VALUES('".implode("','",$values)."')";
-    // $query = mysqli_query($sql, $this->db);
+    // Dynamically create the param and type placeholders for statement
+    foreach ($values as $value) {
+      $valuesStr .= "?, ";
+      $typesStr .= substr(gettype($value), 0, 1);
+    }
+    
+    // Remove last comma and space from string
+    $valuesStr = substr($valuesStr, 0, -2);
+    
+    // call_user_func_array expects array values to be references, add the types ref
+    $bindParamArgs[] = &$typesStr;
+    // Then loop through and reference each value var
+    for($i = 0; $i < count($values); $i++) {
+      $bindParamArgs[] = &$values[$i];
+    }
+    
+    $sql = "INSERT INTO `$table` (".implode(',',$keys).") Values ($valuesStr)";
+      
+    if (!$stmt = $this->mysqli->prepare($sql)) {
+      // @todo log here
+      echo $this->mysqli->error;
+      exit();
+    }
+    
+    if (!call_user_func_array(array($stmt, 'bind_param'), $bindParamArgs)) {
+       // @todo log here
+      echo $this->mysqli->error;
+      exit();
+    }
+    
+    if ($stmt->execute()) {
+      return $successMessage;
+    } else {
+      return "Error: " . $sql . "<br>" . $conn->error;
+    }
+    
+    
+    // $sql = "INSERT INTO `$table` (".implode(',',$keys).") VALUES('".implode("','",$values)."')";
+    // // $query = mysqli_query($sql, $this->db);
     
 
-    if ($this->mysqli->query($sql) === TRUE) {
-        echo $successMessage;
-    }else{
-        echo "Error: " . $sql . "<br>" . $conn->error;
-    }
+    // if ($this->mysqli->query($sql) === TRUE) {
+    //     return $successMessage;
+    // }else{
+    //     return "Error: " . $sql . "<br>" . $conn->error;
+    // }
     
     
     //This is for the error/success messages 
@@ -99,17 +137,90 @@ class DatabaseHelper{
     #header( "Location: /$section/?error=" . mysql_error() );
   }
   
+  
+  
+  private function preparedStatement($sql){
+     $valuesStr = "";
+    $typesStr = "";
+    $bindParamArgs = array();
+    
+    foreach($formData as $key => $value){
+      $values[] = $value;
+      $keys[] = $key;
+    }
+    
+    if (count($values) != count($keys)) {
+      // error here
+    } 
+    
+    // Dynamically create the param and type placeholders for statement
+    foreach ($values as $value) {
+      $valuesStr .= "?, ";
+      $typesStr .= substr(gettype($value), 0, 1);
+    }
+    
+    // Remove last comma and space from string
+    $valuesStr = substr($valuesStr, 0, -2);
+    
+    // call_user_func_array expects array values to be references, add the types ref
+    $bindParamArgs[] = &$typesStr;
+    // Then loop through and reference each value var
+    for($i = 0; $i < count($values); $i++) {
+      $bindParamArgs[] = &$values[$i];
+    }
+    
+    
+      
+    if (!$stmt = $this->mysqli->prepare($sql)) {
+      // @todo log here
+      echo $this->mysqli->error;
+      exit();
+    }
+    
+    if (!call_user_func_array(array($stmt, 'bind_param'), $bindParamArgs)) {
+       // @todo log here
+      echo $this->mysqli->error;
+      exit();
+    }
+    
+    if ($stmt->execute()) {
+      return $successMessage;
+    } else {
+      return "Error: " . $sql . "<br>" . $conn->error;
+    }
+  }
+  
+  
   /**
    * Enables updates to specific data regarding in the database for a given 
    * table
    * 
    * @param string $table Name of table to update row in
    * @param array $formData Array of data to insert into specified row
-   * @param int $id ID of row to update data within specified table
+   * @param string $sql Sql to update table, needs to specify which row
    * 
    * @TODO Write update method
    */
-  public function update($table, $formData, $id){}
+  public function update($table, $formData, $sql){
+    
+    foreach($formData as $key => $value){
+      $values[] = $value;
+      $keys[] = $key;
+    }
+    
+
+    if ($this->mysqli->query($sql) === TRUE) {
+        return true;
+    }else{
+        return "Error: " . $sql . "<br>" . $conn->error;
+    }
+    
+    
+  }
+
+
+
+
 
   /**
    * Removes a row of a given table based on the given parameters
@@ -121,19 +232,6 @@ class DatabaseHelper{
    */
   public function remove($table, $id){}
   
-  /**
-   * Returns all the rows from the table given as a parameter
-   * 
-   * @param string $table Name of table to fetch data from
-   * @return array Array of rows from given table
-   */
-  public function getAllByTableName($table) {
-    if(!isset($table)){
-      return false; 
-    }
-    
-    return $this->queryRows("SELECT * FROM `$table`");
-  }
   
   /**
    * Fetches a single row from a table specified in the given SQL
