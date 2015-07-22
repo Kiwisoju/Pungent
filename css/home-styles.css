@@ -72,6 +72,10 @@ img.grayscale:hover{
     filter: none;
 }
 
+img{
+  margin-left:auto;
+  margin-right:auto;
+}
 
 /*Tablet Devices */
  @media (max-width : 768px) {

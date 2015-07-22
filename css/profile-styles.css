@@ -12,7 +12,15 @@
 #bio{
     text-align:left;
 }
-
+#image-badge-wrapper{
+  padding-bottom:20px;
+}
+textarea{
+  resize:none;
+  font-size:16px;
+  font-family:'Open Sans', sans-serif;
+  margin-bottom:20px;
+}
 #profile-row{
     padding-bottom:20px;
 }
@@ -20,10 +28,6 @@
 #badges-container{
     background-color:#e5e5e5;
     width:50%;
-}
-
-#profile-image{
-    padding-right:20px;
 }
 
 /* Footer clearing floats */
@@ -101,7 +105,11 @@ padding-left:20px;
   .rating-group{
     padding-top:5px;
   }
-  
+  #profile-image, #profile-row h2{
+    margin:auto;
+    float:none!important;
+    padding-bottom:20px;
+  }
   .pun-text{
     width:100%;
     text-align:center;
