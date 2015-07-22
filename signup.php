@@ -1,11 +1,10 @@
 <?php
 
 require_once('authenticator.php');
+require_once('database-queries.php');
 $authenticator = new AuthenticatorHelper();
 $database = new DatabaseHelper();
-   // Sticky forms
-    //if($_POST['submit']){
-      //  $data = $_POST; 
+$databaseQueries = new DatabaseQueries();
         
     /* Once POST has been submitted, the info gets sent in an array
     into the database insert method, then the authenticator logs the 
@@ -16,38 +15,17 @@ $database = new DatabaseHelper();
         // Setting the $_POST data to $data so as to set the values
         // in the form set to what was previously entered.
         $data = $_POST; 
-        // Creating an empty array to store error messages.
-        $errorMessage = [];
-        // Checking if username has been filled
-        if(empty($_POST['username']) ){
-            $errorMessage[] = "Please enter a username";
-            
-        
-        // Checking if password has been filled
-        }elseif(empty($_POST['password']) ){
-            $errorMessage[] = "Please enter a password";
-           
-        
-        
-        // Checking if same password has been filled
-        }elseif(empty($_POST['password-match']) ){
-            $errorMessage[] = "Please enter your matching password";
-          
-        
-        // Checking if passwords match
-        }elseif(!($_POST['password'] === $_POST['password-match']) ){
-            $errorMessage[] = "Your passwords do not match";
-            die(print_r($errorMessage));
+        if($databaseQueries->addUser($_POST) ){
+            // Logs the user in, redirecting to the home page with login success message 
+            //$authenticator->login($_POST['username'], $_POST['password']);
+            header('Location: /index.php?signup=yes');
+        }else{
+            echo "Failed to add new user au";
         }
-    // Unsetting the matching password so as to not insert it into the
-    // database.
-    unset($_POST['password-match']);    
-    // Inserting user to the database
-    $database->insert('Users',$_POST,"Successfully added new user");
     }
+        
        
-    // Logs the user in, redirecting to the home page with login success message 
-    $authenticator->login($_POST['username'], $_POST['password']);
+    
     
     
 ?>
@@ -88,14 +66,21 @@ $database = new DatabaseHelper();
 <body>
 <div class="container content">
 <div class="container page-content text-center" id="landing-page-container">
+    <?php if($_GET['message']):?>
+        <div class="popup"><p><?= $_GET['message']?></p> </div>
+    <?php endif; ?>
             <div class="text-center logo">
                 <h1>Pungent</h1>
                 <h3>A Socially Moderated Pun Competition</h3>
             </div>    
         <div id="signup-container">
             <form method="post">
-                <input type="text" class="form-control input-lg" name="username" value="<?= $data['username']?>" placeholder="Enter username">
-                <input type="password" class="form-control input-lg" name="password" value="<?= $data['password']?>" placeholder="Enter password">
-                <input type="password" class="form-control input-lg" name="password-match" value="<?= $data['password-match']?>" placeholder="Enter same password">
+                <input type="text" class="form-control input-lg" name="username" value="<?= $data['username']?>" placeholder="Enter username" required>
+                <input type="password" class="form-control input-lg" name="password" value="<?= $data['password']?>" placeholder="Enter password" required>
+                <input type="password" class="form-control input-lg" name="password-match" value="<?= $data['password-match']?>" placeholder="Enter same password" required>
                 <input type="submit" class="btn btn-md btn-primary btn-lg custom-button">
             </form>
+            
+<?php
+include('footer.php');
+?>
