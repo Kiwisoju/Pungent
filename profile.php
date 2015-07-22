@@ -1,35 +1,51 @@
 <?php
 // Require security helpers
 require_once('authenticator.php');
+require_once('database-queries.php');
 $authenticator = new AuthenticatorHelper();
 // Secured content, redirect unauthenticated users
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
+$databaseQueries = new DatabaseQueries();
 include('header.php');
+
+if($_POST){
+        // Setting the $_POST data to $data so as to set the values
+        // in the form set to what was previously entered.
+        
+        $data = $_POST; 
+        $databaseQueries->addBio($data);
+    }
+
 ?>
  <!-- Page Content -->
     <div class="container page-content text-center">
+    <?php if($_GET['bio']=='yes'):?>
+        <div class="popup"><p>Biography update successful.</p> </div>
+      <?php elseif($_GET['bio']=='no'):?>
+        <div class="popup"><p>Error updating biography.</p> </div>
+        <?php endif; ?>
         <div id="profile-container">
             <div class="row" id="profile-row">
-              <h2 class="pull-left">Username</h2>
+              <h2 class="pull-left"><?=$_GET['username']?></h2>
+            </div>
+          <div class="row" id="image-badge-wrapper">
+              <img id="profile-image" class="pull-left" src="http://placehold.it/200x200"></img>
               <div class="pull-right header-dropshadow" id="badges-container">
                   <h3>Badges</h3>
                   <img src="http://placehold.it/50x50"></img>
                   <img src="http://placehold.it/50x50"></img>
                   <img src="http://placehold.it/50x50"></img>
               </div>
-          </div>
-          <div class="row">
-              <img id="profile-image" class="pull-left" src="http://placehold.it/200x200"></img>
-              <p class="" id="bio">Lorem ipsum dolor sit amet, consectetuer adipiscing elit,
-              sed diam nonummy nibh euismod tincidunt ut laoreet dolore
-              magna aliquam erat volutpat. Ut wisi enim ad minim veniam,
-              quis nostrud exerci tation ullamcorper suscipit lobortis nisl
-              ut aliquip ex ea commodo consequat. Duis autem vel eum iriure
-              dolor in hendrerit in vulputate velit esse molestie consequat,
-              vel illum dolore eu feugiat nulla facilisis.
-              </p>
-          </div>
+            </div>
+          <?php if($_SESSION['username'] == $_GET['username']):?>
+              <form method="POST" id="bio">
+                <textarea class="form-control" rows="5" placeholder="Write your bio here.." name="bio" value="<?=$data['bio']?>" required></textarea>
+                <input type="submit" class="btn btn-md btn-primary btn-lg custom-button">
+              </form>
+              <?php else: ?>
+              <p id='bio'><?= 'the bio from the database' ?></p>
+              <?php endif; ?>   
         </div>
         
         <hr class="hr-fade">
