@@ -45,7 +45,7 @@ private $db;
  
 	public function login($username, $password){
 		//Build query to find all users
-		$sql = "SELECT * FROM Users WHERE username = '$username'";
+		$sql = "SELECT * FROM users WHERE username = '$username'";
 		
 		//Run query to find specific user and check password matches hashed password
 		if($result = $this->db->queryRow($sql) ){

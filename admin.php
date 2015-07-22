@@ -30,7 +30,7 @@ switch($_GET['action']){
 		header('Location: /about.php');
 		break;
 	case'profile':
-		header('Location: /profile.php');
+		header('Location: /profile.php?username='.$_SESSION['username']);
 		break;
 	case'sitemap':
 		header('Location: /sitemap.php');
