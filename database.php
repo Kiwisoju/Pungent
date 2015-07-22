@@ -115,26 +115,6 @@ class DatabaseHelper{
       return "Error: " . $sql . "<br>" . $conn->error;
     }
     
-    
-    // $sql = "INSERT INTO `$table` (".implode(',',$keys).") VALUES('".implode("','",$values)."')";
-    // // $query = mysqli_query($sql, $this->db);
-    
-
-    // if ($this->mysqli->query($sql) === TRUE) {
-    //     return $successMessage;
-    // }else{
-    //     return "Error: " . $sql . "<br>" . $conn->error;
-    // }
-    
-    
-    //This is for the error/success messages 
-    #if(!$section)
-      #return;
-      
-    #if($query)
-     # header( "Location: /$section/?success=$successMessage" );
-    
-    #header( "Location: /$section/?error=" . mysql_error() );
   }
   
   
@@ -244,12 +224,10 @@ class DatabaseHelper{
    if( !isset($this->query) ){
     
     $result = $this->mysqli->query($sql);
-     while($row = $result->fetch_assoc() ){
+    while($row = $result->fetch_assoc() )
       return $row;
-  }
-  
     }
-    
+
   }
   
   # @TODO Document DatabaseHelper->queryRows()

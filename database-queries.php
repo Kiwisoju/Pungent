@@ -91,11 +91,10 @@ private $db;
     	// so that they don't end up escaping the sql..
     	$sql = "UPDATE `users` SET `bio` = '".$data['bio']."' WHERE `username` = '$username'";
 			if( $this->db->update('users', $data, $sql) ){
-				// Need to look up how to add more than one action to the URL so that i can keep the user
-				// on their page as an editor, while displaying a success or error message. However for
-				// now it is updating the database.
+			//redirect success
 			header('Location: /profile.php?username=test&bio=yes');
 			}else{
+				//redirect failure
 				header('Location: /profile.php?username=test&bio=no');
 			}
     }
@@ -104,8 +103,12 @@ private $db;
      * Method to return biography from the database
      */
      
-    public function readBio(){
-     
+    public function getBio(){
+    	$username = $_SESSION['username'];
+    	$sql = "SELECT `bio` FROM `users` WHERE `username` = '$username'";
+          if($result = $this->db->queryRow($sql) ){
+          return $result;      
+          }
     }
     
     

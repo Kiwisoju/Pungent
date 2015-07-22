@@ -40,11 +40,11 @@ if($_POST){
             </div>
           <?php if($_SESSION['username'] == $_GET['username']):?>
               <form method="POST" id="bio">
-                <textarea class="form-control" rows="5" placeholder="Write your bio here.." name="bio" value="<?=$data['bio']?>" required></textarea>
+                <textarea class="form-control" rows="5" placeholder="Write your bio here.." name="bio" required><?= $databaseQueries->getBio()['bio']; ?></textarea>
                 <input type="submit" class="btn btn-md btn-primary btn-lg custom-button">
               </form>
               <?php else: ?>
-              <p id='bio'><?= 'the bio from the database' ?></p>
+              <p id='bio'><?= $databaseQueries->getBio()['bio']?></p>
               <?php endif; ?>   
         </div>
         
