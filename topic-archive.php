@@ -6,6 +6,10 @@ $authenticator = new AuthenticatorHelper();
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
 include('header.php');
+require_once('database.php');
+$db = new DatabaseHelper();
+
+
 ?>
   <!-- Page Content -->
     <div class="container page-content text-center">
@@ -29,21 +33,21 @@ include('header.php');
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Trees</td>
-                            <td>johncarter</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Music</td>
-                            <td>peterparker</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Food</td>
-                            <td>johnrambo</td>
-                        </tr>
+                        <?php
+                        // Get rows from the Topic-challenge table showing only id and topic
+                        $topicChallengeData = $db->queryRows("SELECT `id`, `topic` FROM `topic_challenge`"); 
+                        
+                        for ($row = 0; $row < count($topicChallengeData); $row++){
+                            echo "<tr>";
+                        
+                            foreach($topicChallengeData[$row] as $key => $value)
+                            {
+                                echo "<td>".$value."</td>";
+                            }
+                            echo "</tr>";
+                        }
+                        ?>
+                        
                     </tbody>
                 </table>
             </div>
