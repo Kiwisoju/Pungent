@@ -93,7 +93,7 @@ private $db;
 		
 		$username = $_SESSION['username']; 
 		//Build query to find all users
-		$sql = "SELECT admin FROM Users WHERE username = '$username'";
+		$sql = "SELECT admin FROM users WHERE username = '$username'";
 
 		
 		//Run query to find specific user and return admin boolean

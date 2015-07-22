@@ -142,46 +142,26 @@ class DatabaseHelper{
    * @return array $row Row matched by the given SQL statement
    */
   public function queryRow($sql = '') {
-    //$this->query = ($this->query) ? $this->query : mysql_query($sql, $this->mysql);
-              
-    if( !isset($this->query) ){
-  /*    # @TODO Replace error message with redirect + log + email notification 
-      $this->query = $this->mysqli->query($sql, $this->mysqli)
-          or die('Query failed: ' . mysql_error());
-    }
+   
+   if( !isset($this->query) ){
     
-    $row = mysql_fetch_assoc($this->query);
-    return $row;
+    $result = $this->mysqli->query($sql);
+     while($row = $result->fetch_assoc() ){
+      return $row;
   }
-  */
-  
-  $result = $this->mysqli->query($sql);
-while($row = $result->fetch_assoc()){
-    return $row;
-}
   
     }
     
   }
+  
   # @TODO Document DatabaseHelper->queryRows()
   public function queryRows($sql = ''){
-    $result = array();
     
-    while( $row = $this->queryRow($sql) ){
-      $result[] = $row;
+    $result = $this->mysqli->query($sql);
+    $rows = array();
+    while($row = $result->fetch_assoc()){
+             $rows[] = $row;
     }
-    
-    $this->query = null;
-    return $result;
-  }
+    return $rows;
+ }
 }
-
-/* This is how to verify the password when you pull it out of the database.
-Figure out how to implement this a little later on.
-
-if($newuser['password']){
-$newuser['password']=password_verify($newuser['password'], PASSWORD_DEFAULT );
-}else{
-    die('nothing happened');
-}
-*/
