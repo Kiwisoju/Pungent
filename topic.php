@@ -1,7 +1,9 @@
 <?php
 // Require security helpers
 require_once('authenticator.php');
+require_once('display-puns.php');
 $authenticator = new AuthenticatorHelper();
+$displayPuns = new DisplayPuns();
 // Secured content, redirect unauthenticated users
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
@@ -22,7 +24,7 @@ if($_POST){
       <div class="popup"><p>Pun post un-successful</p> </div>
       <?php endif; ?>
       <div class="topic challenge">
-       <h2><a href="?topic_challenge3">Topic Challenge #<?=$databaseQueries->getChallenge("topic_challenge")['id'] ?><br><?= $databaseQueries->getChallenge("topic_challenge")['topic']?></a></h2>
+       <h2><a href="?topic_challenge3">Topic Challenge #<?=$databaseQueries->getChallenge("topic_challenge")['topic_id'] ?><br><?= $databaseQueries->getChallenge("topic_challenge")['topic']?></a></h2>
         <a href="?previoustopic"><i class="fa fa-chevron-left pull-left fa-2"></i></a>
         <a href="?anothertopic"><i class="fa fa-chevron-right pull-right fa-2"></i></a>
         <form class="pun-input" method="post">
@@ -34,19 +36,9 @@ if($_POST){
         
         <hr class="hr-fade">
         
-         <div class="pun-post">
-            <p class="pun-date pull-left">26/06/2015</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">+31</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="?username-profile">Username</a></p>
-        </div>
-      </div>
-<?php
+         <?php
+         $totalPuns = $displayPuns->totalPuns('topic');
+         $displayPuns->getPuns($totalPuns,'topic');
+
 include('footer.php');
 ?>
