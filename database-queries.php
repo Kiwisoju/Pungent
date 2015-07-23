@@ -92,10 +92,10 @@ private $db;
     	$sql = "UPDATE `users` SET `bio` = '".$data['bio']."' WHERE `username` = '$username'";
 			if( $this->db->update('users', $data, $sql) ){
 			//redirect success
-			header('Location: /profile.php?username=test&bio=yes');
+			header('Location: /profile.php?username='.$username.'&bio=yes');
 			}else{
 				//redirect failure
-				header('Location: /profile.php?username=test&bio=no');
+				header('Location: /profile.php?username='.$username.'&bio=no');
 			}
     }
     
@@ -103,8 +103,7 @@ private $db;
      * Method to return biography from the database
      */
      
-    public function getBio(){
-    	$username = $_SESSION['username'];
+    public function getBio($username){
     	$sql = "SELECT `bio` FROM `users` WHERE `username` = '$username'";
           if($result = $this->db->queryRow($sql) ){
           return $result;      
@@ -121,13 +120,14 @@ private $db;
      	$type = ( isset($data['pun-topic']) ) ? 'topic' : 'image';
      	$table = "{$type}_pun_post";
 			$data["pun"] = $data["pun-{$type}"];
-			$data["{$type}_id"] = $this->getChallenge("{$type}_challenge")['id'];
+			$data["{$type}_id"] = $this->getChallenge("{$type}_challenge")["{$type}_id"];
 			unset($data["pun-{$type}"]);
     	
 			//Setting up the rest of the formData
 			// To get the topic-id the pun post was set for..
 			$data["username"] = $_SESSION['username'];
 			$data["rating"] = 0;
+			
 			//Inserting data into the database
 			if($this->db->insert($table, $data,"Pun succesfully posted") ){
 				//Redirect with successmessage
@@ -226,7 +226,7 @@ private $db;
        * Converts images into base_64
        */
        public function convertImage($image){
-        $path = 'images/'.$image.'';
+        $path = $image;
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         return $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
@@ -240,7 +240,29 @@ private $db;
        * @param string $table Table to insert image into
        * @param string $image String containing images filepath
        **/ 
-   public function uploadImage($table, $image){
+   
+   		public function uploadImage($table, $image){
+   		$successMessage = "Image has been uploaded";
+   		$username = $_SESSION['username'];
+	    $data = array();
+	    
+	    // Converting the image to Base64
+	    $data['image'] = $this->convertImage($image);
+	    
+			$sql = "UPDATE `users` SET `picture` = '".$data['image']."' WHERE `username` = '$username'";
+	    // Run the update method to insert the image to the database
+	    if($this->db->update("image_challenge", $data, $sql) ){
+	    return true;
+	    }
+    
+   }
+   
+   
+    /**
+     * Under construction function for uploading
+     * images specifically for the challenges
+     */ 
+    public function uploadChallengeImage($table, $image){
     $successMessage = 'Image successfully uploaded';
     // Converting the image to Base64
     $formData['image'] = $this->convertImage($image);
@@ -256,12 +278,6 @@ private $db;
     }
     
    }
-    
-    /**
-     * Method for converting uploaded image into Base_64 before
-     * inserting into the database.
-     */ 
-    
      
     
     
