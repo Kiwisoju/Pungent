@@ -234,6 +234,21 @@ private $db;
       
       
       /**
+       * Method to get image from database based
+       * on param of username
+       * @param string $username Username to get image from
+       */
+       
+       public function getImage(){
+       	$username = $_GET['username'];
+       		 // Makes sure that timezone is set to NZ
+          $sql = "SELECT `picture` FROM `users` WHERE `username` = '$username'";
+          if($result = $this->db->queryRow($sql) ){
+          return $result;  
+       }
+       }
+      
+      /**
        * Takes an image, and converts it to Base_64
        * and uploads the image to the database
        * 
