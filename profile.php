@@ -2,12 +2,14 @@
 // Require security helpers
 require_once('authenticator.php');
 require_once('database-queries.php');
+require_once('puns.php');
 require_once('upload.php');
 $authenticator = new AuthenticatorHelper();
 // Secured content, redirect unauthenticated users
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
 $databaseQueries = new DatabaseQueries();
+$puns = new PunsHelper();
 $uploadImage = new UploadHelper();
 include('header.php');
 
@@ -39,8 +41,8 @@ if($_POST){
               <h2 class="pull-left"><?=$_GET['username']?></h2>
             </div>
           <div class="row" id="image-badge-wrapper">
-            <?php if( !(empty($databaseQueries->getImage("username")['picture']) )):?>
-              <img id="profile-image" class="pull-left" src="<?=$databaseQueries->getImage()['picture']?>"></img>
+            <?php if( !(empty($databaseQueries->getImage("username")['image']) )):?>
+              <img id="profile-image" class="pull-left" src="<?=$databaseQueries->getImage()['image']?>"></img>
             <?php else: ?>   
             <img id="profile-image" class="pull-left" src="http://placehold.it/200x200"></img>
             <?php endif; ?>
@@ -60,57 +62,25 @@ if($_POST){
                     <input type="submit" class="btn btn-primary pull-left" value="Upload Image" name="submit_image">
               </form>
               </div>
-          <?php elseif($_SESSION['username'] == $_GET['username']):?>
+          <div class="row">
               <form method="POST" id="bio">
                 <textarea class="form-control" rows="5" placeholder="Write your bio here.." name="bio" required><?= $databaseQueries->getBio($_GET['username'])['bio']; ?></textarea>
                 <input type="submit" class="btn btn-md btn-primary btn-lg custom-button">
               </form>
-              <?php else: ?>
+          
+              <?php elseif(!($_SESSION['username'] == $_GET['username'])): ?>
+              <div class="row">
               <p id='bio'><?= $databaseQueries->getBio($_GET['username'])['bio']?></p>
-              <?php endif; ?>   
+              <?php endif; ?>  
+              </div>
         </div>
         
         <hr class="hr-fade">
         
         <h2>Best Puns</h2>
         
-        <div class="pun-post">
-            <p class="pun-date pull-left">26/06/2015</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">+31</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="?username-profile">Username</a></p>
-        </div>
-         <div class="pun-post">
-            <p class="pun-date pull-left">26/06/2015</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">+31</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="?username-profile">Username</a></p>
-        </div>
-         <div class="pun-post">
-            <p class="pun-date pull-left">26/06/2015</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">+31</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="?username-profile">Username</a></p>
-            <div id="clear-floats"></div>
-        </div>
-<?php
+        <?php $puns->getUserPuns($_GET['username']);
+                
+
 include('footer.php');
 ?>

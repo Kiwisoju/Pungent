@@ -35,6 +35,8 @@ public function uploadImage(){
         $message = "Sorry, only JPG, JPEG, & PNG files are allowed.";
         header('Location: '. $_SERVER['HTTP_REFERER'].'&message='.$message);
     }
+    // Resize the image
+    
     
     // Upload image, takes care of Base64 conversion then uploads
     // to the database.

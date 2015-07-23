@@ -1,10 +1,10 @@
 <?php
 // Require security helpers
 require_once('authenticator.php');
-require_once('display-puns.php');
+require_once('puns.php');
 $authenticator = new AuthenticatorHelper();
 $database = new DatabaseHelper();
-$displayPuns = new DisplayPuns();
+$puns = new PunsHelper();
 // Secured content, redirect unauthenticated users
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
@@ -40,7 +40,7 @@ if($_POST){
       <hr class="hr-fade">
       <div class="topic challenge">
         <h2><a href="?topic-challenge3">Topic Challenge #<?=$databaseQueries->getChallenge("topic_challenge")['topic_id'] ?><br><?= $databaseQueries->getChallenge("topic_challenge")['topic']?></a></h2>
-        <?php $displayPuns->getPuns(3, 'topic');?>
+        <?php $puns->getPuns(3, 'topic');?>
         <form class="pun-input" method="post">
           <div class="form-group">
               <input type="text" class="form-control text-center" name="pun-topic" value="<?= $data['pun-topic']?>" placeholder="Post your pun here" required></input>
@@ -52,7 +52,7 @@ if($_POST){
       <div class="image challenge">
         <h2><a href="?image-challenge3">Image Challenge #<?= $databaseQueries->getChallenge("image_challenge")['image_id']?></a></h2>
         <img class="grayscale img-responsive" src="<?=$databaseQueries->getChallenge("image_challenge")['image']?>"/>
-      <?php $displayPuns->getPuns(3, 'image');?>
+      <?php $puns->getPuns(3, 'image');?>
         <form class="pun-input" method="post">
           <div class="form-group">
               <input type="text" class="form-control text-center" name="pun-image" value="<?= $data['pun-image']?>" placeholder="Post your pun here" required></input>

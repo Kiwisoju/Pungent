@@ -52,7 +52,7 @@
                 <h3>A Socially Moderated Pun Competition</h3>
             </div>    
         <div id="signin-container">
-            <form method="POST" action="<?= $_SERVER['PHP_SELF']?>">
+            <form method="POST">
                 <label for="inputEmail" class="sr-only">Username</label>
                 <input type="text" id="inputEmail" class="form-control input-lg" name="login[username]" placeholder="Username">
                 <label for="inputPassword" class="sr-only">Password</label>

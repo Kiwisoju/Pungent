@@ -1,9 +1,9 @@
 <?php
 // Require security helpers
 require_once('authenticator.php');
-require_once('display-puns.php');
+require_once('puns.php');
 $authenticator = new AuthenticatorHelper();
-$displayPuns = new DisplayPuns();
+$puns = new PunsHelper();
 // Secured content, redirect unauthenticated users
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
@@ -37,8 +37,8 @@ if($_POST){
         <hr class="hr-fade">
         
          <?php
-         $totalPuns = $displayPuns->totalPuns('topic');
-         $displayPuns->getPuns($totalPuns,'topic');
+         $totalPuns = $puns->totalPuns('topic');
+         $puns->getPuns($totalPuns,'topic');
 
 include('footer.php');
 ?>

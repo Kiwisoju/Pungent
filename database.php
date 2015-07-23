@@ -65,152 +65,74 @@ class DatabaseHelper{
    * 
    * @TODO Replace switch with default of 'manage-'.$table, if $redirect param not supplied
    */
-  public function insert($table, $formData, $successMessage) {
-    $valuesStr = "";
-    $typesStr = "";
-    $bindParamArgs = array();
+   public function insert($table, $formData, $successMessage) {
+    $helperVars = $this->preparedStatementHelper($formData);
     
-    foreach($formData as $key => $value){
-      $values[] = $value;
-      $keys[] = $key;
-    }
-    
-    if (count($values) != count($keys)) {
-      // error here
-    } 
-    
-    // Dynamically create the param and type placeholders for statement
-    foreach ($values as $value) {
-      $valuesStr .= "?, ";
-      $typesStr .= substr(gettype($value), 0, 1);
-    }
-    
-    // Remove last comma and space from string
-    $valuesStr = substr($valuesStr, 0, -2);
-    
-    // call_user_func_array expects array values to be references, add the types ref
-    $bindParamArgs[] = &$typesStr;
-    // Then loop through and reference each value var
-    for($i = 0; $i < count($values); $i++) {
-      $bindParamArgs[] = &$values[$i];
-    }
-    
-    $sql = "INSERT INTO `$table` (".implode(',',$keys).") Values ($valuesStr)";
+    $sql = "INSERT INTO `{$table}` ({$helperVars['keysStr']}) VALUES ({$helperVars['valuesStr']})";
       
-    if (!$stmt = $this->mysqli->prepare($sql)) {
-      // @todo log here
-      echo $this->mysqli->error;
-      exit();
-    }
-    
-    if (!call_user_func_array(array($stmt, 'bind_param'), $bindParamArgs)) {
-       // @todo log here
-      echo $this->mysqli->error;
-      exit();
-    }
-    
-    if ($stmt->execute()) {
-      return $successMessage;
-    } else {
-      return "Error: " . $sql . "<br>" . $conn->error;
-    }
-    
-  }
-  
-  
-  
-  private function preparedStatement($sql){
-     $valuesStr = "";
-    $typesStr = "";
-    $bindParamArgs = array();
-    
-    foreach($formData as $key => $value){
-      $values[] = $value;
-      $keys[] = $key;
-    }
-    
-    if (count($values) != count($keys)) {
-      // error here
-    } 
-    
-    // Dynamically create the param and type placeholders for statement
-    foreach ($values as $value) {
-      $valuesStr .= "?, ";
-      $typesStr .= substr(gettype($value), 0, 1);
-    }
-    
-    // Remove last comma and space from string
-    $valuesStr = substr($valuesStr, 0, -2);
-    
-    // call_user_func_array expects array values to be references, add the types ref
-    $bindParamArgs[] = &$typesStr;
-    // Then loop through and reference each value var
-    for($i = 0; $i < count($values); $i++) {
-      $bindParamArgs[] = &$values[$i];
-    }
-    
-    
-      
-    if (!$stmt = $this->mysqli->prepare($sql)) {
-      // @todo log here
-      echo $this->mysqli->error;
-      exit();
-    }
-    
-    if (!call_user_func_array(array($stmt, 'bind_param'), $bindParamArgs)) {
-       // @todo log here
-      echo $this->mysqli->error;
-      exit();
-    }
-    
-    if ($stmt->execute()) {
-      return $successMessage;
-    } else {
-      return "Error: " . $sql . "<br>" . $conn->error;
-    }
-  }
-  
-  
+    return $this->runPreparedStatement($sql, $helperVars['bindParamArgs']);
+   }
+
   /**
    * Enables updates to specific data regarding in the database for a given 
    * table
    * 
    * @param string $table Name of table to update row in
    * @param array $formData Array of data to insert into specified row
-   * @param string $sql Sql to update table, needs to specify which row
+   * @param string $whereKey Key to insert
+   * @param string $whereValue Value to insert
    * 
    * @TODO Write update method
    */
-  public function update($table, $formData, $sql){
+  public function update($table, $formData, $whereKey, $whereValue){ 
+    $helperVars = $this->preparedStatementHelper($formData);
     
-    foreach($formData as $key => $value){
-      $values[] = $value;
-      $keys[] = $key;
-    }
+    // Add type of whereValue to typesStr and push to end of array
+    $helperVars['bindParamArgs'][0] .= $this->getFieldTypeInitial($whereValue);
+    array_push($helperVars['bindParamArgs'], $whereValue);
     
-
-    if ($this->mysqli->query($sql) === TRUE) {
-        return true;
-    }else{
-        return "Error: " . $sql . "<br>" . $conn->error;
-    }
+    $sql = "UPDATE `{$table}` SET {$helperVars['keyValStr']} WHERE {$whereKey} = ?";
     
-    
+    return $this->runPreparedStatement($sql, $helperVars['bindParamArgs']);
   }
-
-
-
-
 
   /**
    * Removes a row of a given table based on the given parameters
    * 
    * @param string $table Name of table to remove row from
-   * @param int $id ID of row to remove from table
    * 
    * @TODO Write remove method
    */
-  public function remove($table, $id){}
+  public function remove($table, $whereData){
+    $helperVars = $this->preparedStatementHelper($whereData, 'delete');
+    
+    $sql = "DELETE FROM `{$table}` WHERE {$helperVars['keyValStr']}";
+
+    return $this->runPreparedStatement($sql, $helperVars['bindParamArgs']);
+  }
+  
+  /*
+  // idea output for a delete thing
+  Only show this is users post...
+  <div>
+  <form action="./post/delete" method="post">
+    <input type="hidden" name="id" value="233"  />
+    <button type="submit">Delete</button>
+  </form>
+  </div>
+  
+  
+  function deletePun($formData) {
+    // get user name from session and put in var
+    $formData['username'] = $usernameVar;
+    
+    you should call die and test  sql looks something like this for debugging
+    DELETE FROM `topic_pun_post` WHERE id = ? AND username = ?
+    
+    // check this works, sql could fail if already removed or invalid username
+    $this->db->remove('pun', $formData);
+  }
+  */
   
   
   /**
@@ -225,7 +147,7 @@ class DatabaseHelper{
     
     $result = $this->mysqli->query($sql);
     while($row = $result->fetch_assoc() )
-      return $row;
+      return $row; 
     }
 
   }
@@ -236,8 +158,80 @@ class DatabaseHelper{
     $result = $this->mysqli->query($sql);
     $rows = array();
     while($row = $result->fetch_assoc()){
-             $rows[] = $row;
+        $rows[] = $row;
     }
     return $rows;
  }
+ 
+ 
+ /**
+  * Method to return array
+  */ 
+ private function preparedStatementHelper($formData, $queryType=null){
+    $valuesStr = $typesStr = '';
+    $keyValDelimiter = '= ?, ';
+    
+    foreach($formData as $key => $value){
+      $values[] = $value;
+      $keys[] = $key;
+      
+      // Dynamically create the param and type placeholders for a statement
+      $valuesStr .= "?, ";
+      $typesStr .= $this->getFieldTypeInitial($value);
+    }
+   
+    // Remove last comma and space from string
+    $valuesStr = substr($valuesStr, 0, -2);
+    
+    $bindParamArgs = $values;
+    array_unshift($bindParamArgs, $typesStr);
+    
+    if (isset($queryType) && $queryType == 'delete') {
+      $keyValDelimiter = '= ? AND ';
+    }
+    
+    return array(
+      'keysStr' => implode(',',$keys),
+      'keyValStr' => implode($keyValDelimiter, $keys) . '= ?',
+      'valuesStr' => $valuesStr,
+      'typesStr' => $typesStr,
+      'bindParamArgs' => $bindParamArgs
+    );
+ }
+
+  private function getFieldTypeInitial($type) {
+    return substr(gettype($type), 0, 1);
+  }
+/**
+ * Method to create and run prepared statement
+ * @param string $sql Prepared sql statement
+ */ 
+ private function runPreparedStatement($sql, $bindParamArgs){
+    $refBindParamArgs = array();
+   
+    // call_user_func_array expects array values to be references. Loop through 
+    // and reference each arg var
+    for($i = 0; $i < count($bindParamArgs); $i++) {
+      $refBindParamArgs[] = &$bindParamArgs[$i];
+    }
+    
+    if (!$stmt = $this->mysqli->prepare($sql)) {
+      // @todo log here
+      echo $this->mysqli->error;
+      exit();
+    }
+    
+    if (!call_user_func_array(array($stmt, 'bind_param'), $refBindParamArgs)) {
+       // @todo log here
+      echo $this->mysqli->error;
+      exit();
+    }
+    
+    if (!$stmt->execute()) {
+      return "Error: {$sql}<br>{$conn->error}"; 
+    } 
+      
+    return true;
+ } 
+  
 }

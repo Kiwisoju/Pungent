@@ -89,8 +89,9 @@ private $db;
     	$username = $_SESSION['username'];
     	// Just need to prepare the $data['bio'] to take care of all the apostrophes
     	// so that they don't end up escaping the sql..
-    	$sql = "UPDATE `users` SET `bio` = '".$data['bio']."' WHERE `username` = '$username'";
-			if( $this->db->update('users', $data, $sql) ){
+    	//$sql = "UPDATE `users` SET `bio` = '".$data['bio']."' WHERE `username` = '$username'";
+    	
+			if( $this->db->update('users', $data, 'username', $username) ){
 			//redirect success
 			header('Location: /profile.php?username='.$username.'&bio=yes');
 			}else{
@@ -242,7 +243,7 @@ private $db;
        public function getImage(){
        	$username = $_GET['username'];
        		 // Makes sure that timezone is set to NZ
-          $sql = "SELECT `picture` FROM `users` WHERE `username` = '$username'";
+          $sql = "SELECT `image` FROM `users` WHERE `username` = '$username'";
           if($result = $this->db->queryRow($sql) ){
           return $result;  
        }
@@ -266,7 +267,7 @@ private $db;
 	    
 			$sql = "UPDATE `users` SET `picture` = '".$data['image']."' WHERE `username` = '$username'";
 	    // Run the update method to insert the image to the database
-	    if($this->db->update("image_challenge", $data, $sql) ){
+	    if($this->db->update($table , $data, 'username' ,$username ) ){
 	    return true;
 	    }
     

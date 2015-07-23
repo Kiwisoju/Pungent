@@ -52,10 +52,10 @@ private $db;
 			if(password_verify($password, $result['password'])){
 				$_SESSION['username'] = $username;
 				$_SESSION['loggedIn'] = true;
-				$_SESSION['testingthings'] = 'Igotsettosomething';
-				header('Location: /home.php?loggedin=yes');
+				
 			}else{
-				$result =  false;
+				$message = "Password and username don't match";
+				header('Location: /index.php?message='.$message);
 			}
 	}
 

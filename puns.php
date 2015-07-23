@@ -1,11 +1,12 @@
 <?php
 require_once('database-queries.php');
 require_once('database.php');
-class DisplayPuns{
+
+class PunsHelper{
     
     private $db;
     
-    public function DisplayPuns(){
+    public function PunsHelper(){
         $this->db = new DatabaseHelper();
     }
     
@@ -21,13 +22,14 @@ class DisplayPuns{
         //$punTable = $table.'_pun_post';
         if($table == 'topic' || $table == 'image'){
         $sql = "SELECT ".$table.", pun, username, rating, date
-  FROM ".$table."_challenge
-  JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
-  ORDER BY rating DESC";
+          FROM ".$table."_challenge
+          JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
+          ORDER BY rating DESC";
        }else{
             echo 'Table must be either topic or image';
         }
   
+    
         if($punData = $this->db->queryRows($sql))
         {
            
@@ -56,8 +58,59 @@ class DisplayPuns{
     }
     
     /**
+     * Method to return array of puns based on
+     * username given. This is primarily to display
+     * puns on profile pages.
+     * @param string $username Username to get puns from
+     */
+    
+    public function getUserPuns($username){
+        $sql = "SELECT username, pun, date, rating FROM topic_pun_post
+            WHERE username='".$username."'
+            UNION ALL
+            SELECT username, pun, date, rating FROM image_pun_post
+            WHERE username='".$username."'
+            ORDER BY rating DESC";
+        $num = 3;    
+
+    if($punData = $this->db->queryRows($sql))
+        {
+           //If there are less than 3 items in the array, change
+           // $num to be the same as the length of the array.
+           if(count($punData)<$num){
+               $num = count($punData);
+           }
+               
+           
+            // Now iterate over this data based on $num and output the HTML template
+            for($i = 0; $i < $num; $i++){
+            $data = $punData[$i];    
+          
+               echo '<div class="pun-post">
+             <p class="pun-date pull-left">'.substr($data["date"], 0, 10).'</p>
+            <div class="pun-inner row">
+              <p class="pun-text pull-left col-xs-9 text-left">'.$data["pun"].'</p>
+              <div class="rating-group">
+                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
+                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
+                <a href="#" class="rating-number">'.$data["rating"].'</a>
+              </div>          
+            </div>
+            <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.$data["username"].'</a></p>
+        </div>';
+                
+            
+            }
+        }else{
+            echo '<div class="pun-post"><p>This user has no puns<br>They should be punished..</p></div>';
+        }
+
+    }
+    
+    /**
      * Method to receive how many total puns there
-     * are in the database.
+     * are in the database based on parameter
+     * @param string $table Table to receive puns from.
      */ 
     public function totalPuns($table){
         
