@@ -89,7 +89,7 @@ nav hr {
     margin-left:auto;
     margin-right:auto;
     margin-top:26px;
-    width:30%;
+    width:20%;
     border-top:1px solid #bbb;
 
 }
@@ -183,7 +183,7 @@ ul{
 
 footer{
   background-color:#28292b;
-  margin-top:15px;
+  margin-top:40px;
 }
 
 #footer-links:hover{

@@ -59,7 +59,7 @@ if($_GET){
         <?php endif; ?>
         <div id="profile-container">
             <div class="row" id="profile-row">
-              <h2 class="pull-left"><?=$_GET['username']?></h2>
+              <h2 class="pull-left"><?=htmlspecialchars($_GET['username'], ENT_COMPAT,'ISO-8859-1', true)?></h2>
             </div>
           <div class="row" id="image-badge-wrapper">
             <?php if( !(empty($databaseQueries->getImage("username")['image']) )):?>
@@ -85,13 +85,13 @@ if($_GET){
               </div>
           <div class="row">
               <form method="POST" id="bio">
-                <textarea class="form-control" rows="5" placeholder="Write your bio here.." name="bio" required><?= $databaseQueries->getBio($_GET['username'])['bio']; ?></textarea>
+                <textarea class="form-control" rows="5" placeholder="Write your bio here.." name="bio" required><?= htmlspecialchars($databaseQueries->getBio($_GET['username'])['bio'], ENT_COMPAT,'ISO-8859-1', true); ?></textarea>
                 <input type="submit" class="btn btn-md btn-primary btn-lg custom-button">
               </form>
           
               <?php elseif(!($_SESSION['username'] == $_GET['username'])): ?>
               <div class="row">
-              <p id='bio'><?= $databaseQueries->getBio($_GET['username'])['bio']?></p>
+              <p id='bio'><?= htmlspecialchars($databaseQueries->getBio($_GET['username'])['bio'], ENT_COMPAT,'ISO-8859-1', true)?></p>
               <?php endif; ?>  
               </div>
         </div>

@@ -24,10 +24,6 @@ $databaseQueries = new DatabaseQueries();
         }
     }
         
-       
-    
-    
-    
 ?>
 <html>
 <head>

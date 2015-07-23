@@ -78,14 +78,14 @@ class PunsHelper{
                echo '<div class="pun-post">
              <p class="pun-date pull-left">'.substr($data["date"], 0, 10).'</p>
             <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">'.$data["pun"].'</p>
+              <p class="pun-text pull-left col-xs-9 text-left">'.htmlspecialchars($data["pun"], ENT_COMPAT,'ISO-8859-1', true).'</p>
               <div class="rating-group">
                 <i class="fa fa-thumbs-up fa-2"></i>
                 <i class="fa fa-thumbs-down fa-2"></i>
                 <a href="#" class="rating-number">'.$data["rating"].'</a>
               </div>          
             </div>
-            <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.$data["username"].'</a></p>
+            <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
         </div>';
                 
             
@@ -217,7 +217,7 @@ class PunsHelper{
                echo '<div class="pun-post">
              <p class="pun-date pull-left">'.substr($data["date"], 0, 10).'</p>
             <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">'.$data["pun"].'</p>
+              <p class="pun-text pull-left col-xs-9 text-left">'.htmlspecialchars($data["pun"], ENT_COMPAT,'ISO-8859-1', true).'</p>
               <div class="rating-group">
               <form method="get">
                 <a href="?table='.$table.'&id='.$data['id'].'&rating=up&currentRating='.$data['rating'].'"><i class="fa fa-thumbs-up fa-2"></i></a>
@@ -226,7 +226,7 @@ class PunsHelper{
                 </form>
               </div>          
             </div>
-            <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.$data["username"].'</a></p>
+            <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
             ';if($_SESSION["username"] == $data["username"]){
                 echo'
             <form method="POST">

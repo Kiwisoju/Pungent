@@ -61,13 +61,7 @@
             </form>
         </div>
             
-            <hr class="hr-fade">
-            <!-- Facebook log in button -->
-            <div id="fb-container">
-                <form>
-                    <button class="btn btn-md btn-primary btn-lg" type="submit">Sign in with FaceBook</button>
-                </form>
-            </div>
+            
             <hr class="hr-fade">
             <!-- Sign up button -->
             <div id="signup-container">
@@ -93,14 +87,16 @@
                   <li><a href="admin.php?action=challenges"  aria-haspopup="true"><span>Challenges</span></a>
               			<ul class="dropdown navbar-nav nav">
               				<li><a href="admin.php?action=topic" aria-haspopup="true"><span>Topic</span></a>
+              				<?php /*
                         <ul class="dropdown navbar-nav nav">
                           <li id="third-dropdown"><a href="admin.php?action=topic-archive">Archive</a></li>
-                        </ul>
+                        </ul>*/?>
                       </li>
                       <li><a href="admin.php?action=image-page" aria-haspopup="true"><span>Image</span></a>
+                      <?php /*
                         <ul class="dropdown navbar-nav nav">
                           <li id="third-dropdown"><a href="admin.php?action=image-archive">Archive</a></li>
-                        </ul>
+                        </ul> */?>
                       </li>
                     </ul>
               		</li>

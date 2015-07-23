@@ -26,10 +26,12 @@ private $db;
 			public function addUser($formData){
         // Checking if passwords match, if not set errormessage
         // and redirect back to signup
-        if(!($formData['password'] === $formData['password-match']) ){
-            $errorMessage = "Your passwords do not match";
-            header( "Location: /signup.php?message=" . $errorMessage );
-        }
+        //die(var_dump($formData['password']!=$formData['password-match']));
+        
+        if($formData['password']!=$formData['password-match']){
+            $message = "Your passwords do not match";
+            
+        }else{
 		    //Getting the formData ready for insert. Removing matching
 		    //password, hashing password and inserting username
 		    
@@ -41,13 +43,15 @@ private $db;
 		    $username = $formData['username'];
 		    if(!($this->db->queryRow("SELECT `username` FROM `users` Where `username` = '$username'") )){
 					//Inserting user to the database and redirecting
-					header("Location: /index.php?message=" .$this->db->insert('users', $formData, "Successfully added new user")  );
+					$this->db->insert('users',$formData,"User successfully added");
+					$message = "User successfully added";
+					exit(header("Location: /index.php?message=".$message));
 		    }else{
-		    	$errorMessage = "User already taken";
-          header( "Location: /signup.php?message=" . $errorMessage );
+		    	$message = "User already taken";
 		    }
 			}
-      
+			header( "Location: ?message=".$message );
+			}
       /**
        * Method to get all user properties
        * 
@@ -201,6 +205,7 @@ private $db;
           date_default_timezone_set("Pacific/Auckland");
           $currentWeek = date('W');
           $sql = "SELECT * FROM `$table` WHERE `week` = '$currentWeek'";
+          //die(var_dump($sql));
           if($result = $this->db->queryRow($sql) ){
           return $result;      
           }
