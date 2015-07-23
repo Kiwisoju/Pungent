@@ -24,11 +24,32 @@ if($_POST){
         elseif(array_key_exists('submit_image', $data)){
           $uploadImage->uploadImage($_FILES);
         }
+        elseif(array_key_exists('delete', $data)){
+        //die(var_dump($data));
+        $table = $data['table'];
+        $id['id'] = $data['id'];
+        die(var_dump($data));
+          if($puns->removePun($table, $id)){
+            $message = "Pun deleted";
+            header('Location: /home.php?message='.$message);
+          }
+        }elseif(array_key_exists('edit', $data)){
+          
+          header('Location: /edit-pun.php?table='.$data['table'].'&id='.$data['id']);
+        }
     }
-
+if($_GET){
+  if($_GET['rating'] == 'up')
+  {
+    
+  $puns->ratePun();
+  }elseif($_GET['rating'] == 'down'){
+     $puns->ratePun();
+  }
+}    
 ?>
  <!-- Page Content -->
-    <div class="container page-content text-center">
+    <div class="container page-content text-center">`
     <?php if($_GET['bio']=='yes'):?>
         <div class="popup"><p>Biography update successful.</p> </div>
       <?php elseif($_GET['bio']=='no'):?>

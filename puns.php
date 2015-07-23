@@ -21,42 +21,30 @@ class PunsHelper{
         //$challengeTable = $table.'_challenge';
         //$punTable = $table.'_pun_post';
         if($table == 'topic' || $table == 'image'){
-        $sql = "SELECT ".$table.", pun, username, rating, date
+        $sql = "SELECT ".$table.", pun, username, rating, date, id
           FROM ".$table."_challenge
           JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
           ORDER BY rating DESC";
        }else{
             echo 'Table must be either topic or image';
         }
-  
-    
-        if($punData = $this->db->queryRows($sql))
-        {
-           
-            // Now iterate over this data based on $num and output the HTML template
-            for($i = 0; $i < $num; $i++){
-            $data = $punData[$i];    
-          
-               echo '<div class="pun-post">
-             <p class="pun-date pull-left">'.substr($data["date"], 0, 10).'</p>
-            <div class="pun-inner row">
-              <p class="pun-text pull-left col-xs-9 text-left">'.$data["pun"].'</p>
-              <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">'.$data["rating"].'</a>
-              </div>          
-            </div>
-            <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.$data["username"].'</a></p>
-        </div>';
-                
-            
-            }
-        }else{
-            return 'Error getting puns';
-        }
+        $errorMessage = 'Error getting puns';
+  $this->punTemplate($sql,$table,$num, $errorMessage);
+   
+        
+        
     }
     
+    
+    public function updatePun($table, $data, $whereVal){
+        $table = $table."_pun_post";
+        
+        if($this->db->update($table , $data, 'pun', $whereVal  ) ){  
+            return true;
+        }
+        
+    }
+    //if ($getPostInfo->user_id == $core->getUserInfo($_SESSION["username"])->id) { 
     /**
      * Method to return array of puns based on
      * username given. This is primarily to display
@@ -65,13 +53,14 @@ class PunsHelper{
      */
     
     public function getUserPuns($username){
-        $sql = "SELECT username, pun, date, rating FROM topic_pun_post
+        $sql = "SELECT username, pun, date, rating, id FROM topic_pun_post
             WHERE username='".$username."'
             UNION ALL
-            SELECT username, pun, date, rating FROM image_pun_post
+            SELECT username, pun, date, rating, id FROM image_pun_post
             WHERE username='".$username."'
             ORDER BY rating DESC";
         $num = 3;    
+        $errorMessage = '<div class="pun-post"><p>This user has no puns<br>They should be punished..</p></div>';
 
     if($punData = $this->db->queryRows($sql))
         {
@@ -91,8 +80,8 @@ class PunsHelper{
             <div class="pun-inner row">
               <p class="pun-text pull-left col-xs-9 text-left">'.$data["pun"].'</p>
               <div class="rating-group">
-                <a href="#"><i class="fa fa-thumbs-up fa-2"></i></a>
-                <a href="#"><i class="fa fa-thumbs-down fa-2"></i></a>
+                <i class="fa fa-thumbs-up fa-2"></i>
+                <i class="fa fa-thumbs-down fa-2"></i>
                 <a href="#" class="rating-number">'.$data["rating"].'</a>
               </div>          
             </div>
@@ -102,7 +91,7 @@ class PunsHelper{
             
             }
         }else{
-            echo '<div class="pun-post"><p>This user has no puns<br>They should be punished..</p></div>';
+            echo $errorMessage;
         }
 
     }
@@ -128,6 +117,135 @@ class PunsHelper{
         }
        
     }
+    
+    
+    public function findPunById(){
+        
+        $table = $_GET['table'];
+        $id = $_GET['id'];
+        $sql = "SELECT `pun` FROM `{$table}_pun_post` WHERE `id` = '{$id}'";
+        return $this->db->queryRow($sql);
+
+    }
+    
+    public function removePun($table, $whereData){
+        
+        $table = $table."_pun_post";
+       if($this->db->remove($table, $whereData))
+       return true;
+    }
+    
+    private function rate($table, $id, $username, $currentRating, $rating){
+        if($table == 'topic'){
+            $table = 'topic_pun_post';
+        }elseif($table == 'image'){
+            $table = 'image_pun_post';
+        }
+        $formData['rating'] = $rating;
+        if($formData['rating'] == "up"){
+            $formData['rating'] = $currentRating + 1;
+             return $this->db->update($table, $formData,'id', $id );
+        }
+        elseif($formData['rating'] == 'down'){
+            
+            $formData['rating'] = $currentRating - 1;
+               return $this->db->update($table, $formData,'id', $id );
+            }
+            
+        
+    }
+    
+    
+    private function setRateIp($table, $id, $username){
+       if($table == 'topic')
+       {
+           $formData['topic_pun_id'] = $id;
+       }elseif($table == 'image'){
+           $formData['image_pun_id'] = $id;
+       }
+       
+        $formData['username'] = $username;
+        $table .= '_rating_ips';
+        //die(var_dump($formData));
+        
+        return $this->db->insert($table, $formData, 'Ip has been set');
+    }
+    
+    private function getRateIps($table, $id, $username){
+        $sql = "SELECT * FROM `{$table}_rating_ips` WHERE `{$table}_pun_id` = {$id} AND `username` = '{$username}'";
+        //die(var_dump($sql));
+        return $this->db->queryRow($sql);
+    }
+    
+    public function ratePun(){
+        $username = $_SESSION['username'];
+        $table = $_GET['table'];
+        $id = $_GET['id'];
+        $rating = $_GET['rating'];
+        $currentRating = $_GET['currentRating'];
+        
+        //Check whether IP exists already in the table
+        //Getting all ips already stored.
+        $allIpFromTable = $this->getRateIps($table, $id, $username);
+        //die(var_dump($allIpFromTable));
+        if(!isset($allIpFromTable)){
+            $this->setRateIp($table, $id, $username);
+            if($this->rate($table, $id, $username, $currentRating, $rating)){
+                $message = 'Pun has been rated';
+                header('Location: ?message='.$message);
+                
+            };
+        }else{
+            $message = 'You have already rated this pun';
+            header('Location: ?message='.$message);
+        }
+        
+        //if all clear then update the table to include your ip linked
+        //with the correct id.
+        
+        //Then increase the number or decrease the rating on the other table.
+    
+    }
+    
+     private function punTemplate($sql, $table, $num, $errorMessage){
+        if($punData = $this->db->queryRows($sql)){
+           
+            // Now iterate over this data based on $num and output the HTML template
+            for($i = 0; $i < $num; $i++){
+            $data = $punData[$i];    
+          
+               echo '<div class="pun-post">
+             <p class="pun-date pull-left">'.substr($data["date"], 0, 10).'</p>
+            <div class="pun-inner row">
+              <p class="pun-text pull-left col-xs-9 text-left">'.$data["pun"].'</p>
+              <div class="rating-group">
+              <form method="get">
+                <a href="?table='.$table.'&id='.$data['id'].'&rating=up&currentRating='.$data['rating'].'"><i class="fa fa-thumbs-up fa-2"></i></a>
+                <a href="?table='.$table.'&id='.$data['id'].'&rating=down&currentRating='.$data['rating'].'"><i class="fa fa-thumbs-down fa-2"></i></a>
+                <a href="#" class="rating-number">'.$data["rating"].'</a>
+                </form>
+              </div>          
+            </div>
+            <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.$data["username"].'</a></p>
+            ';if($_SESSION["username"] == $data["username"]){
+                echo'
+            <form method="POST">
+            <input type="submit" class="btn btn-danger" name="delete" value="delete">
+            <input type="submit" class="btn btn-default" name="edit" value="edit">
+            <input type="hidden" name="id" value="'.($data['id']).'">
+            <input type="hidden" name="table" value="'.($table).'">
+            </form>';}
+            echo'</div>';
+            $data['table'] = $table;    
+            $_SESSION['punData'] = $data;
+           
+            }
+        }else{
+            return $errorMessage;
+        }
+    }
 }
+    
+
 
 ?>

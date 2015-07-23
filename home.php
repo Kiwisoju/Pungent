@@ -13,9 +13,30 @@ include('header.php');
 if($_POST){
         // Setting the $_POST data to $data so as to set the values
         // in the form set to what was previously entered.
-        $data = $_POST; 
-        $databaseQueries->addPun($data);
+        $data = $_POST;
+        if(array_key_exists('delete', $data)){
+        //die(var_dump($data));
+        $table = $data['table'];
+        $id['id'] = $data['id'];
+          if($puns->removePun($table, $id)){
+            $message = "Pun deleted";
+            header('Location: /home.php?message='.$message);
+          }
+        }elseif(array_key_exists('edit', $data)){
+          
+          header('Location: /edit-pun.php?table='.$data['table'].'&id='.$data['id']);
+        }else{
+        $databaseQueries->addPun($data);}
     }
+if($_GET){
+  if($_GET['rating'] == 'up')
+  {
+    
+  $puns->ratePun();
+  }elseif($_GET['rating'] == 'down'){
+     $puns->ratePun();
+  }
+}    
 /** pun of the day
  * Will use the date function to check what the present
  * date is, and pull the row where the date matches.
