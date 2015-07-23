@@ -4,7 +4,7 @@
  $authenticator = new AuthenticatorHelper();
  $database = new DatabaseHelper();
  $databaseQueries = new DatabaseQueries();
- // Abstracting the custom stylesheets. Just suckin off
+ // Abstracting the custom stylesheets.
  $stylesheet = substr($_SERVER['PHP_SELF'], 0, -4);
 ?>
 <html>

@@ -87,9 +87,7 @@ private $db;
      
     public function addBio($data){
     	$username = $_SESSION['username'];
-    	// Just need to prepare the $data['bio'] to take care of all the apostrophes
-    	// so that they don't end up escaping the sql..
-    	//$sql = "UPDATE `users` SET `bio` = '".$data['bio']."' WHERE `username` = '$username'";
+    	
     	
 			if( $this->db->update('users', $data, 'username', $username) ){
 			//redirect success
