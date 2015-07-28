@@ -19,6 +19,10 @@ include('header.php');
                     </div>
                 </div>
             </form>
+            <?php if($_GET['srch-term']){
+                $databaseQueries->searchArchive('image',$_GET['srch-term']);
+            }elseif($_GET['message'])
+            echo $_GET['message'];?>
             <div class="table-responsive">
                <table class="table table-hover">
                     <thead>

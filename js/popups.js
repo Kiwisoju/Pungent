@@ -2,7 +2,7 @@ if (!jQuery) {
     console.log('jquery.popupoverlay - jQuery not defined.');
 }
 require(['jquery.popupoverlay.js']);
-
+require(['formValidation.min.js']);
 
 $(document).ready(function () {
 
@@ -13,5 +13,8 @@ $(document).ready(function () {
       transition: '0.3s',
       scrolllock: true
     });
+    
+    
+   
 
 });

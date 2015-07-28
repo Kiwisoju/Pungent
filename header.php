@@ -1,4 +1,5 @@
 <?php
+
  require_once('authenticator.php');
  require_once('database-queries.php');
  $authenticator = new AuthenticatorHelper();
@@ -6,6 +7,8 @@
  $databaseQueries = new DatabaseQueries();
  // Abstracting the custom stylesheets.
  $stylesheet = substr($_SERVER['PHP_SELF'], 0, -4);
+ 
+ 
 ?>
 <html>
 <head>
@@ -22,7 +25,7 @@
     
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
+    
     <!-- FontAwesome CSS Sheet -->
     <link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
@@ -52,16 +55,21 @@
                 <h3>A Socially Moderated Pun Competition</h3>
             </div>    
         <div id="signin-container">
-            <form method="POST">
-                <label for="inputEmail" class="sr-only">Username</label>
-                <input type="text" id="inputEmail" class="form-control input-lg" name="login[username]" placeholder="Username">
-                <label for="inputPassword" class="sr-only">Password</label>
-                <input type="password" id="inputPassword" class="form-control input-lg" name="login[password]" placeholder="Password">
+            <form method="POST" id="signinForm">
+                <label for="username" class="sr-only">Username</label>
+                <input type="text" id="username" class="form-control input-lg required" value="<?= $_SESSION['sticky']?>" name="login[username]" data-validate="regex(abc,Must contain abc)" placeholder="Username">
+                <label for="password" class="sr-only">Password</label>
+                <input type="password" id="password" class="form-control input-lg required" name="login[password]" placeholder="Password">
                 <input type="submit" class="btn btn-md btn-primary btn-lg custom-button" name="signin" value="Sign In">
             </form>
         </div>
-            
+        
+        <!-- Facebook log in button -->
+            <div id="fb-container">
+                    <a class="btn btn-md btn-primary btn-lg" href="<?=$loginUrl ?>">Sign in with FaceBook</a>
+            </div>
             <hr class="hr-fade">
+            
             <!-- Sign up button -->
             <div id="signup-container">
                 <a href="signup.php" class="btn btn-md btn-primary btn-lg custom-button">Sign Up</a>

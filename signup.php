@@ -14,7 +14,8 @@ $databaseQueries = new DatabaseQueries();
     if($_POST){
         // Setting the $_POST data to $data so as to set the values
         // in the form set to what was previously entered.
-        $data = $_POST; 
+        $data = $_POST;
+        $_SESSION['sticky'] = $data['username'];
         if($databaseQueries->addUser($_POST) ){
             // Logs the user in, redirecting to the home page with login success message 
             //$authenticator->login($_POST['username'], $_POST['password']);
@@ -71,9 +72,9 @@ $databaseQueries = new DatabaseQueries();
             </div>    
         <div id="signup-container">
             <form method="post">
-                <input type="text" class="form-control input-lg" name="username" value="<?= $data['username']?>" placeholder="Enter username" required>
-                <input type="password" class="form-control input-lg" name="password" value="<?= $data['password']?>" placeholder="Enter password" required>
-                <input type="password" class="form-control input-lg" name="password-match" value="<?= $data['password-match']?>" placeholder="Enter same password" required>
+                <input type="text" class="form-control input-lg required" name="username" value="<?= $_SESSION['sticky']?>" placeholder="Enter username" required>
+                <input type="password" class="form-control input-lg required" name="password"  placeholder="Enter password" required>
+                <input type="password" class="form-control input-lg required" name="password-match"  placeholder="Enter same password" required>
                 <input type="submit" class="btn btn-md btn-primary btn-lg custom-button">
             </form>
             

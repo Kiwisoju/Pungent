@@ -1,5 +1,6 @@
 <?php
 require_once('database.php');
+require_once('puns.php');
 
 class DatabaseQueries{
     
@@ -7,8 +8,7 @@ private $db;
 
     //instantiates a connection to the database
     public function DatabaseQueries(){
-    $this->db = new DatabaseHelper();    
-        
+    $this->db = new DatabaseHelper();  
     }
     
     /**
@@ -41,7 +41,7 @@ private $db;
 		    // Checking if username already exists, if not then insert to database, otherwise
 		    // redirect with error message.
 		    $username = $formData['username'];
-		    if(!($this->db->queryRow("SELECT `username` FROM `users` Where `username` = '$username'") )){
+		    if(!($this->db->queryRow("SELECT `username` FROM `users` WHERE `username` = '$username'") )){
 					//Inserting user to the database and redirecting
 					$this->db->insert('users',$formData,"User successfully added");
 					$message = "User successfully added";
@@ -53,6 +53,30 @@ private $db;
 			header( "Location: ?message=".$message );
 			}
 			
+			public function addFbUser($formData, $picture){
+			 $username = $formData['name'];
+			 $sql = "SELECT username FROM users WHERE username = '{$username}'";
+			 //$sql = "SELECT username FROM users WHERE username = 'test'";
+			 
+			 //die(var_dump($username));
+			 //die(var_dump($sql));
+			 //$result = $this->db->queryRow($sql);
+			 //die(var_dump(!isset($result)));
+		    if(!($this->db->queryRow($sql) )){
+					//Inserting user to the database and redirecting
+					$fbUser['username'] = $formData['name'];
+					$this->db->insert('users',$fbUser,"User successfully added");
+					$message = "User successfully added"; 
+		    }
+					else{
+					$_SESSION['loggedIn'] = true;
+					$_SESSION['username'] = $username;
+					
+		   $this->uploadImage('users',$picture);
+		   $message = "Welcome {$username}";
+					exit(header("Location: /home.php?message=".$message));
+					}
+			}
 			
 			public function getAllUsers(){
 				$sql = "SELECT username FROM users";
@@ -296,7 +320,50 @@ private $db;
     }
     
    }
-     
+    /**
+     * Method to search database based on table
+     * and search/keyword supplied by user.
+     * @param string $table Table to search
+     * @param string $search Search/keyword to query
+     **/ 
+   public function searchArchive($table, $search){
+     if($table == 'topic' || $table =='image'){
+    		// Get current week
+    		date_default_timezone_set("Pacific/Auckland");
+        $currentWeek = date('W');
+    		// Search based on topic first if theres a match, display the winning
+    		// pun
+    		$sql = "SELECT `{$table}_id`,`$table` FROM `{$table}_challenge` WHERE week < $currentWeek AND `$table` LIKE '%{$search}%'";
+    		if($result = $this->db->queryRow($sql)){
+    		  $id = $result[$table.'_id'];
+    		  return($this->getPunsById(1, $table, $id));
+    		}else{
+    		  // Search based on challenge_# next, display the winning pun, for
+      		// the challenge number it's based on
+      		$sql = "SELECT `{$table}_id`,`$table` FROM `{$table}_challenge` WHERE week < $currentWeek AND `{$table}_id` LIKE '%{$search}%'";
+      		if($result = $this->db->queryRow($sql)){
+      		  $id = $result[$table.'_id'];
+      		  return($this->getPunsById(1, $table, $id));
+    		  
+    		}else{
+    		  $sql = "SELECT {$table}, pun, username, rating, date, id 
+    		          FROM {$table}_challenge 
+    		          JOIN {$table}_pun_post ON {$table}_pun_post.{$table}_id = {$table}_challenge.{$table}_id 
+    		          WHERE week < 31 AND username LIKE '%{$search}%' 
+    		          ORDER BY rating DESC";
+      		if($result = $this->db->queryRow($sql)){
+      		  $id = $result[$table.'_id'];
+      		  return($this->getPunsById(1, $table, $id));
+    		  }else
+    		  $message = 'No results found';
+    		  header('Location: /'.$table.'-archive.php?message='.$message);
+    		}}
+    		
+    		// Search based on username. Return all puns where username has the highest
+    		// rating..
+    }
+   }
+   
     public function displayArchive($table){
     	if($table == 'topic' || $table =='image'){
     		// Get current week
@@ -345,7 +412,95 @@ private $db;
     	
     }
     
+    public function getPunsByUsername($num, $table, $username){
+      if($table == 'topic' || $table == 'image'){
+            if($id){
+                $sql = "SELECT ".$table.", pun, username, rating, date, id
+                FROM ".$table."_challenge
+                JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
+                WHERE username = $username
+                ORDER BY rating DESC"; 
+            }else{
+                $sql = "SELECT ".$table.", pun, username, rating, date, id
+                FROM ".$table."_challenge
+                JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
+                ORDER BY rating DESC";
+            }
+        
+       }else{
+            echo 'Table must be either topic or image';
+        }
+        
+        $errorMessage = 'Error getting puns';
+  $this->punTemplate($sql,$table,$num, $errorMessage);
+    }
     
+    public function getPunsById($num,$table,$id=null){
+        if($table == 'topic' || $table == 'image'){
+            if($id){
+                $sql = "SELECT ".$table.", pun, username, rating, date, id
+                FROM ".$table."_challenge
+                JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
+                WHERE {$table}_challenge.{$table}_id = $id
+                ORDER BY rating DESC";
+          
+            }else{
+                $sql = "SELECT ".$table.", pun, username, rating, date, id
+                FROM ".$table."_challenge
+                JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
+                ORDER BY rating DESC";
+            }
+        
+       }else{
+            echo 'Table must be either topic or image';
+        }
+        
+        $errorMessage = 'Error getting puns';
+  $this->punTemplate($sql,$table,$num, $errorMessage);
+   
+    }
+    
+    private function punTemplate($sql, $table, $num, $errorMessage){
+        if($punData = $this->db->queryRows($sql)){
+          //If there are less than 3 items in the array, change
+           // $num to be the same as the length of the array.
+           if(count($punData) < $num){
+               $num = count($punData);
+           }
+            // Now iterate over this data based on $num and output the HTML template
+            for($i = 0; $i < $num; $i++){
+            $data = $punData[$i];    
+          
+               echo '<div class="pun-post">
+             <p class="pun-date pull-left">'.substr($data["date"], 0, 10).'</p>
+            <div class="pun-inner row">
+              <p class="pun-text pull-left col-xs-9 text-left">'.htmlspecialchars($data["pun"], ENT_COMPAT,'ISO-8859-1', true).'</p>
+              <div class="rating-group">
+              <form method="get">
+                <a href="?table='.$table.'&id='.$data['id'].'&rating=up&currentRating='.$data['rating'].'"><i class="fa fa-thumbs-up fa-2"></i></a>
+                <a href="?table='.$table.'&id='.$data['id'].'&rating=down&currentRating='.$data['rating'].'"><i class="fa fa-thumbs-down fa-2"></i></a>
+                <span class="rating-number">'.$data["rating"].'</span>
+                </form>
+              </div>          
+            </div>
+            <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
+            ';if($_SESSION["username"] == $data["username"] || $_SESSION['user']["admin"] == true){
+                echo'
+            <form method="POST">
+            <input type="submit" class="btn btn-danger" name="delete" value="delete">
+            <input type="submit" class="btn btn-default" name="edit" value="edit">
+            <input type="hidden" name="id" value="'.($data['id']).'">
+            <input type="hidden" name="table" value="'.($table).'">
+            </form>';}
+            echo'</div>';
+            $data['table'] = $table;    
+            $_SESSION['punData'] = $data;
+           
+            }
+        }else{
+            return $errorMessage;
+        }
+    }
 }
 
 ?>
