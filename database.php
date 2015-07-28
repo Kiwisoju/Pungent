@@ -9,8 +9,7 @@ class DatabaseHelper{
   private $query;
   
   /**
-   * Constructor method that initialise database connection
-   * TODO Set up an error alternative.
+   * Constructor method that initialises database connection
    */
   function DatabaseHelper(){
     // Open connect to database
@@ -25,7 +24,6 @@ class DatabaseHelper{
    */
   private function connect(){
     // Connect and select database
-    # @TODO Replace error message with redirect + log + email notification 
     $servername = getenv('IP');
     $username = getenv('C9_USER');
     $password = "Ch4ng3m3#";
@@ -44,8 +42,6 @@ class DatabaseHelper{
         die("Connection failed: " . $mysqli->connect_error);
     } 
     // "Connected successfully (".$mysqli->host_info.")";
-                
-  
     
     return $mysqli;
   }
@@ -54,16 +50,11 @@ class DatabaseHelper{
    * Inserts a single row of data into database based on parameters 
    * given and if data consists of password, will hash the password 
    * prior to entry.
-   * 
-   * To Add:
-   * redirect user on success/failure with message/error 
-   * in URL parameter
    *    
    * @param string $table Name of table to insert new row into
    * @param array $formData Array of data to insert into new row of table
    * @param string $successMessage Message attached to success URL
    * 
-   * @TODO Replace switch with default of 'manage-'.$table, if $redirect param not supplied
    */
    public function insert($table, $formData, $successMessage) {
     $helperVars = $this->preparedStatementHelper($formData);
@@ -82,7 +73,6 @@ class DatabaseHelper{
    * @param string $whereKey Key to insert
    * @param string $whereValue Value to insert
    * 
-   * @TODO Write update method
    */
   public function update($table, $formData, $whereKey, $whereValue){ 
     $helperVars = $this->preparedStatementHelper($formData);
@@ -101,7 +91,6 @@ class DatabaseHelper{
    * 
    * @param string $table Name of table to remove row from
    * 
-   * @TODO Write remove method
    */
   public function remove($table, $whereData){
     $helperVars = $this->preparedStatementHelper($whereData, 'delete');
@@ -110,30 +99,6 @@ class DatabaseHelper{
 
     return $this->runPreparedStatement($sql, $helperVars['bindParamArgs']);
   }
-  
-  /*
-  // idea output for a delete thing
-  Only show this is users post...
-  <div>
-  <form action="./post/delete" method="post">
-    <input type="hidden" name="id" value="233"  />
-    <button type="submit">Delete</button>
-  </form>
-  </div>
-  
-  
-  function deletePun($formData) {
-    // get user name from session and put in var
-    $formData['username'] = $usernameVar;
-    
-    you should call die and test  sql looks something like this for debugging
-    DELETE FROM `topic_pun_post` WHERE id = ? AND username = ?
-    
-    // check this works, sql could fail if already removed or invalid username
-    $this->db->remove('pun', $formData);
-  }
-  */
-  
   
   /**
    * Fetches a single row from a table specified in the given SQL
@@ -151,8 +116,12 @@ class DatabaseHelper{
     }
 
   }
-  
-  # @TODO Document DatabaseHelper->queryRows()
+   /**
+   * Fetches multiple rows from a table specified in the given SQL
+   * 
+   * @param string $sql SQL to run against connected database
+   * @return array $rows Rows matched by the given SQL statement
+   */
   public function queryRows($sql = ''){
     
     $result = $this->mysqli->query($sql);

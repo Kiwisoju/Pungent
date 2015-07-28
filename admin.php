@@ -2,17 +2,12 @@
 //Require security helper functions
 require_once('authenticator.php');
 require_once('database-queries.php');
-require_once('puns.php');
 //Secured content, redirect unauthenticated users
 $authenticator = new AuthenticatorHelper();
 $databaseQueries = new DatabaseQueries();
-$puns = new PunsHelper();
 if(!($authenticator->isAdmin() )){
     header('Location: /home.php?not-admin=yes');
-    
-    
-    
-    
+   
 }
 
 switch($_GET['action']){
@@ -45,63 +40,53 @@ switch($_GET['action']){
 		break;	
 }
     
-    if($_POST){
-         $data = $_POST;
-        if(array_key_exists('edit', $data)){
-          header('Location: /edit-pun.php?table='.$data['table'].'&id='.$data['id']);
+if($_POST){
+    $data = $_POST;
+    if(array_key_exists('edit', $data)){
+        header('Location: /edit-pun.php?table='.$data['table'].'&id='.$data['id']);
     }elseif(array_key_exists('username', $data)){
         $databaseQueries->removeUser($data);
     }elseif(array_key_exists('delete', $data)){
-        //die(var_dump($data));
         $table = $data['table'];
         $id['id'] = $data['id'];
-          if($puns->removePun($table, $id)){
+        if($databaseQueries->removePun($table, $id)){
             $message = "Pun deleted";
             header('Location: /admin.php?message='.$message);
-          }
-    
-}
+        }
+    }
 }
 
 include('header.php');
 ?>
 
-<!-- html content for admin page -->
  <!-- Page Content -->
     <div class="container page-content text-center">
         <?php if($_GET['message']): ?>
-      <div class="popup"><p><?= $_GET['message']?></p> </div>
-      <?php endif; ?>
-          <h2>Administration</h2>
+        <div class="popup"><p><?= $_GET['message']?></p> </div>
+        <?php endif; ?>
+            <h2>Administration</h2>
               <a class="btn btn-primary btn-lg" href="admin.php?users=yes">Users</a>
               <a class="btn btn-primary btn-lg" href="admin.php?puns=yes">Puns</a>
-         
-                        <?php 
-                        if($_GET['puns']){
-                            ?>
-                            <div class="container">
-                            <a class="btn btn-primary btn-lg" href="admin.php?puns=yes&challenge=image">Image</a>
-                            <a class="btn btn-primary btn-lg" href="admin.php?puns=yes&challenge=topic">Topic</a>
-                            </div>
-                            <?php
-                            if($_GET['challenge']){
-                                $challenge = $_GET['challenge'];
-                                  ?>
-                                <h2><?=$challenge?> Challenge Puns</h2>
-                                <?php
-                                $totalPuns = $puns->totalPuns($challenge,$id);
-                                $displayPuns = $puns->getPunsById($totalPuns, $challenge,$id);
-                                
-                            } 
-                        }elseif($_GET['users']){
-                            
-                            $databaseQueries->getAllUsers();
-                        }
-                        ?>
-                    
-              
-          </div>
-
+                <?php 
+                if($_GET['puns']){
+                    ?>
+                    <div class="container">
+                        <a class="btn btn-primary btn-lg" href="admin.php?puns=yes&challenge=image">Image</a>
+                        <a class="btn btn-primary btn-lg" href="admin.php?puns=yes&challenge=topic">Topic</a>
+                    </div>
+                    <?php
+                    if($_GET['challenge']){
+                        $challenge = $_GET['challenge'];
+                          ?>
+                    <h2><?=$challenge?> Challenge Puns</h2>
+                    <?php
+                    $totalPuns = $databaseQueries->totalPuns($challenge,$id);
+                    $displayPuns = $databaseQueries->getPunsById($totalPuns, $challenge,$id);
+                    } 
+                }elseif($_GET['users']){
+                    $databaseQueries->getAllUsers();
+                }?>
+    </div>
 <?
 include('footer.php');
 ?>

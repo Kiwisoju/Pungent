@@ -1,9 +1,7 @@
 <?php
 // Require security helpers
 require_once('authenticator.php');
-require_once('puns.php');
 $authenticator = new AuthenticatorHelper();
-$puns = new PunsHelper();
 // Secured content, redirect unauthenticated users
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
@@ -17,7 +15,7 @@ if($_POST){
         //die(var_dump($data));
         $table = $data['table'];
         $id['id'] = $data['id'];
-          if($puns->removePun($table, $id)){
+          if($databaseQueries->removePun($table, $id)){
             $message = "Pun deleted";
             header('Location: /topic.php?message='.$message);
           }
@@ -31,9 +29,9 @@ if($_POST){
   if($_GET['rating'] == 'up')
   {
     
-  $puns->ratePun();
+  $databaseQueries->ratePun();
   }elseif($_GET['rating'] == 'down'){
-     $puns->ratePun();
+     $databaseQueries->ratePun();
   }
 }    
 ?>
@@ -62,8 +60,8 @@ if($_POST){
         <hr class="hr-fade">
         
          <?php
-         $totalPuns = $puns->totalPuns('image',$_GET['image']);
-         $puns->getPunsById($totalPuns,'image',$_GET['image']);
+         $totalPuns = $databaseQueries->totalPuns('image',$_GET['image']);
+         $databaseQueries->getPunsById($totalPuns,'image',$_GET['image']);
 
 include('footer.php');
 ?>

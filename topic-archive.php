@@ -6,12 +6,6 @@ $authenticator = new AuthenticatorHelper();
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
 include('header.php');
-require_once('database.php');
-$databaseQueries = new DatabaseQueries();
-$db = new DatabaseHelper();
-
-
-
 ?>
   <!-- Page Content -->
     <div class="container page-content text-center">

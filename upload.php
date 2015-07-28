@@ -11,6 +11,11 @@ public function UploadHelper(){
     $this->dbq = new DatabaseQueries();
 }
 
+/**
+ * Method to upload an image to the users table
+ * in the database.
+ * 
+ */
 public function uploadImage(){
     $upload = 1;
     $targetFile =  basename($_FILES["fileToUpload"]["name"]);
@@ -35,9 +40,7 @@ public function uploadImage(){
         $message = "Sorry, only JPG, JPEG, & PNG files are allowed.";
         header('Location: '. $_SERVER['HTTP_REFERER'].'&message='.$message);
     }
-    // Resize the image
-    
-    
+
     // Upload image, takes care of Base64 conversion then uploads
     // to the database.
     if($upload){

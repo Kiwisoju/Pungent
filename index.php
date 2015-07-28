@@ -1,6 +1,5 @@
 <?php
 require_once('authenticator.php');
-
 session_start();
 require_once __DIR__ . '/vendor/autoload.php';
 $fb = new Facebook\Facebook([
@@ -10,16 +9,8 @@ $fb = new Facebook\Facebook([
   ]);
 
 $helper = $fb->getRedirectLoginHelper();
-
 $permissions = ['email']; // Optional permissions
 $loginUrl = $helper->getLoginUrl('https://pungent-clone-kiwisoju.c9.io/fb-callback.php', $permissions);
-
-
-
-
-
-
-
 
 include('header.php');
 $authenticator = new AuthenticatorHelper();

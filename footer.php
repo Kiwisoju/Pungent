@@ -1,30 +1,30 @@
- <!-- Footer -->
- <?php if($authenticator->isAuthenticated() ): ?>
-        <footer class="text-center">
-            <ul class="nav navbar-nav">
-                <li>
-                    <a id="footer-links" href="admin.php?action=challenges">Challenges</a>
-                </li>
-                <li>
-                    <a id="footer-links" href="admin.php?action=about">About</a>
-                </li>
-                <li>
-                    <a id="footer-links" href="admin.php?action=profile">Profile</a>
-                </li>
-                <li>
-                    <a id="footer-links" href="admin.php?action=sitemap">Sitemap</a>
-                </li>
-            </ul>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright &copy; Pungent 2015</p>
-                </div>
-            </div>
-            <!-- /.row -->
-        </footer>
-
+  <!-- Footer -->
+  <?php if($authenticator->isAuthenticated() ): ?>
+  <footer class="text-center">
+    <ul class="nav navbar-nav">
+      <li>
+        <a id="footer-links" href="admin.php?action=challenges">Challenges</a>
+      </li>
+      <li>
+        <a id="footer-links" href="admin.php?action=about">About</a>
+      </li>
+      <li>
+        <a id="footer-links" href="admin.php?action=profile">Profile</a>
+      </li>
+      <li>
+        <a id="footer-links" href="admin.php?action=sitemap">Sitemap</a>
+      </li>
+    </ul>
+    <div class="row">
+      <div class="col-lg-12">
+        <p>Copyright &copy; Pungent 2015</p>
+      </div>
     </div>
-    <!-- /.container -->
+    <!-- /.row -->
+  </footer>
+
+</div>
+<!-- /.container -->
 <?php endif; ?>
     <!-- jQuery -->
     <script src="/js/jquery-1.11.3.min.js"></script>
@@ -41,5 +41,4 @@
     <script src="/js/popups.js"></script>
     
 </body>
-
 </html>

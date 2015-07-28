@@ -71,9 +71,6 @@ private $db;
 		header('Location: /index.php');
 	}
 
-	/**
-	* Authenticator Helper Functions
-	*/
 
 /**
  * Checks authentication of user
@@ -83,24 +80,18 @@ private $db;
 	}
 	
 /** 
- * Checks is user is authenticated as admin
+ * Checks if user is authenticated as admin
  * 
  * */
 	public function isAdmin(){
-		// Needs to query database with the username, and check whether the 
-		// admin rights boolean is set to on or off. If it is set to on, return
-		// true, otherwise return false.
 		
 		$username = $_SESSION['username']; 
-		//Build query to find all users
+		//Build query check admin of current user
 		$sql = "SELECT admin FROM users WHERE username = '$username'";
-
-		
 		//Run query to find specific user and return admin boolean
 		$result = $this->db->queryRow($sql);
 		//Return the result, will be either true or false
 		return $result['admin'];
-	
 	}
 	
 /**
@@ -110,7 +101,6 @@ private $db;
 		if(!$this->isAuthenticated())
 			$this->logout();
 	}
-
 
 }
 ?>

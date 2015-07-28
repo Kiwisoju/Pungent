@@ -13,7 +13,6 @@ $fb = new Facebook\Facebook([
   'default_graph_version' => 'v2.2',
   ]);
 
-//die(var_dump($_SESSION));
 $helper = $fb->getRedirectLoginHelper();
 
 
@@ -94,7 +93,6 @@ $_SESSION['loggedIn'] = true;
 
 $user = $response->getGraphUser();
 $user_id = $user['id'];
-//die(var_dump($user_id));
 // Getting profile picture from Facebook User
 $request = $fb->get('/me/picture?type=large&redirect=false', $_SESSION['fb_access_token']);
 $picture = "https://graph.facebook.com/{$user_id}/picture?type=large";

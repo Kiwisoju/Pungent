@@ -16,7 +16,6 @@ include('header.php');
           challenge for all users to post their puns. These will be rated
           by your fellow punters and at the end of each week a winner will emerge!<br><br>
           That's about it..
-          
           </p>
         </div>
 <?php

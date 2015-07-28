@@ -1,10 +1,10 @@
 <?php
 // Require security helpers
 require_once('authenticator.php');
-require_once('puns.php');
+require_once('database-queries.php');
 $authenticator = new AuthenticatorHelper();
 $database = new DatabaseHelper();
-$puns = new PunsHelper();
+$databaseQueries = new DatabaseQueries();
 // Secured content, redirect unauthenticated users
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
@@ -15,10 +15,10 @@ $table = $_GET['table'];
 elseif($_GET['table']=='image')
 $table = $_GET['table'];
 
-$whereVal = $puns->findPunById()['pun'];
+$whereVal = $databaseQueries->findPunById()['pun'];
 if(array_key_exists( 'pun', $_POST)){
     $data = $_POST;
-     if($puns->updatePun($table, $data, $whereVal)){
+     if($databaseQueries->updatePun($table, $data, $whereVal)){
          $message = 'Pun successfully updated';
          header("Location: /home.php?message=".$message);
      }
@@ -28,7 +28,7 @@ if(array_key_exists( 'pun', $_POST)){
     <div class="row">
 <form class="pun-input" method="post">
           <div class="form-group">
-              <input type="text" class="form-control text-center" name="pun" value="<?=$puns->findPunById()['pun']?>" placeholder="Post your pun here" required></input>
+              <input type="text" class="form-control text-center" name="pun" value="<?=$databaseQueries->findPunById()['pun']?>" placeholder="Post your pun here" required></input>
           </div>
            <input type="submit" class="btn btn-default">
         </form>

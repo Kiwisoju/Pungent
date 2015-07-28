@@ -28,49 +28,25 @@ class PunsHelper{
           WHERE ".$table."_pun_post.".$table."_id = '$id'
           ORDER BY rating DESC";
           
-          
        }else{
             echo 'Table must be either topic or image';
         }
         $errorMessage = 'Error getting puns';
-  $this->punTemplate($sql,$table,$num, $errorMessage);
-   
+        $this->punTemplate($sql,$table,$num, $errorMessage);
     }
     
-    
-    public function getPunsById($num,$table,$id=null){
-        if($table == 'topic' || $table == 'image'){
-            if($id){
-                $sql = "SELECT ".$table.", pun, username, rating, date, id
-                FROM ".$table."_challenge
-                JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
-                WHERE {$table}_challenge.{$table}_id = $id
-                ORDER BY rating DESC"; 
-            }else{
-                $sql = "SELECT ".$table.", pun, username, rating, date, id
-                FROM ".$table."_challenge
-                JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
-                ORDER BY rating DESC";
-            }
-        
-       }else{
-            echo 'Table must be either topic or image';
-        }
-        
-        $errorMessage = 'Error getting puns';
-  $this->punTemplate($sql,$table,$num, $errorMessage);
-   
-    }
-
+    /**
+     * Method to update a pun
+     * @param string $table Table to update pun from
+     * @param string $data New pun text to update
+     * @param string $whereVal WHERE Val and Keys to determine where to update pun in table
+     */
     public function updatePun($table, $data, $whereVal){
         $table = $table."_pun_post";
-        
         if($this->db->update($table , $data, 'pun', $whereVal  ) ){  
             return true;
         }
-        
     }
-    //if ($getPostInfo->user_id == $core->getUserInfo($_SESSION["username"])->id) { 
     /**
      * Method to return array of puns based on
      * username given. This is primarily to display
@@ -126,6 +102,7 @@ class PunsHelper{
      * Method to receive how many total puns there
      * are in the database based on parameter
      * @param string $table Table to receive puns from.
+     * @param id $id Id to get puns from
      */ 
     public function totalPuns($table,$id){
       
@@ -153,7 +130,6 @@ class PunsHelper{
        
     }
     
-     
     public function findPunById(){
         
         $table = $_GET['table'];

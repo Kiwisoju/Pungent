@@ -1,10 +1,7 @@
 <?php
 // Require security helpers
 require_once('authenticator.php');
-require_once('puns.php');
 $authenticator = new AuthenticatorHelper();
-$database = new DatabaseHelper();
-$puns = new PunsHelper();
 // Secured content, redirect unauthenticated users
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
@@ -17,7 +14,7 @@ if($_POST){
         //die(var_dump($data));
         $table = $data['table'];
         $id['id'] = $data['id'];
-          if($puns->removePun($table, $id)){
+          if($databaseQueries->removePun($table, $id)){
             $message = "Pun deleted";
             header('Location: /home.php?message='.$message);
           }
@@ -31,9 +28,9 @@ if($_GET){
   if($_GET['rating'] == 'up')
   {
     
-  $puns->ratePun();
+  $databaseQueries->ratePun();
   }elseif($_GET['rating'] == 'down'){
-     $puns->ratePun();
+     $databaseQueries->ratePun();
   }
 }    
 /** pun of the day
@@ -60,7 +57,7 @@ if($_GET){
       <hr class="hr-fade">
       <div class="topic challenge">
         <h2><a href="admin.php?action=topic">Topic Challenge #<?=$databaseQueries->getChallenge("topic_challenge")['topic_id'] ?><br><?= $databaseQueries->getChallenge("topic_challenge")['topic']?></a></h2>
-        <?php $puns->getCurrentPuns(3, 'topic');?>
+        <?php $databaseQueries->getCurrentPuns(3, 'topic');?>
         <form class="pun-input" method="post">
           <div class="form-group">
               <input type="text" class="form-control text-center" name="pun-topic" value="<?= $data['pun-topic']?>" placeholder="Post your pun here" required></input>
@@ -72,7 +69,7 @@ if($_GET){
       <div class="image challenge">
         <h2><a href="admin.php?action=image-page">Image Challenge #<?= $databaseQueries->getChallenge("image_challenge")['image_id']?></a></h2>
         <img class="grayscale img-responsive" src="<?=$databaseQueries->getChallenge("image_challenge")['image']?>"/>
-      <?php $puns->getCurrentPuns(3, 'image');?>
+      <?php $databaseQueries->getCurrentPuns(3, 'image');?>
         <form class="pun-input" method="post">
           <div class="form-group">
               <input type="text" class="form-control text-center" name="pun-image" value="<?= $data['pun-image']?>" placeholder="Post your pun here" required></input>
