@@ -18,3 +18,8 @@ table td, table th{
   font-size:16px;
   font-family:'Open Sans', sans-serif;
 }
+
+/* Changing the size of the images within the image archives page */
+img{
+  height:30%;
+}

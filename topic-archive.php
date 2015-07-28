@@ -35,19 +35,7 @@ $db = new DatabaseHelper();
                     </thead>
                     <tbody>
                         <?php
-                        // Get rows from the Topic-challenge table showing only id and topic
-                        // This needs to be joined by some dummy data showing some winners.
-                         //$topicChallengeData = $db->queryRow("SELECT `id`, `topic` FROM `topic_challenge`"); 
-                       die(var_dump($db->queryRows("SELECT `id`,`topic` FROM `topic_challenge`")));
-                        // for ($row = 0; $row < count($topicChallengeData); $row++){
-                        //     echo "<tr>";
-                        
-                        //     foreach($topicChallengeData[$row] as $key => $value)
-                        //     {
-                        //         echo "<td>".$value."</td>";
-                        //     }
-                        //     echo "</tr>";
-                        // }
+                        $databaseQueries->displayArchive('topic');
                         ?>
                         
                     </tbody>

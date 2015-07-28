@@ -52,6 +52,30 @@ private $db;
 			}
 			header( "Location: ?message=".$message );
 			}
+			
+			
+			public function getAllUsers(){
+				$sql = "SELECT username FROM users";
+				if($result = $this->db->queryRows($sql) ){
+					//die(var_dump($result));
+					$numUsers = count($result);
+          for($i = 0; $i < $numUsers; $i++){
+            $users = $result[$i];
+            //die(var_dump($users['username']));
+            echo '<div class="user">
+            			<h2>'.$users['username'].'</h2>
+            			<div class="row">
+            			<a class="btn btn-default btn-lg" href="profile.php?username='.$users['username'].'">Edit/View User Profile</a>
+									<form method="POST">
+									<input type="hidden" name="username" value="'.$users['username'].'">
+									<input type="submit" class="btn btn-danger btn-lg name="delete" value="Delete User">
+									</form>
+									</div>
+            			</div>
+            			<hr class="hr-fade">';
+			}
+				}
+			}
       /**
        * Method to get all user properties
        * 
@@ -64,23 +88,15 @@ private $db;
           }
       }
       
-     /**
-      * Method to edit user properties.
-      * Properties being bio and profile picture.
-      * First needs to read/get all properties
-      * then allow for edits.
-      */ 
-     public function editUser(){
-      
-     }
-    
-    
+
     /**
      * Will delete a user from the database
      */
      
-    public function deleteUser(){
+    public function removeUser($user){
      
+     if($this->db->remove('users', $user))
+       header('Location: /admin.php?message=User Successfully Deleted');
      
     }
     
@@ -143,35 +159,9 @@ private $db;
 			
     }
     
-    /**
-     * Method to edit/update pun
-     */
-     
-    public function editPun(){
-     
-     
-    }
     
-    /**
-     * Method to delete pun from database
-     * Need to think about what parameters will be
-     * needed. Table name? and pun post? Wait until
-     * I've figured how to add and display puns first.
-     */
-    public function deletePun(){
-     
-     
-    }
     
-    /**
-     * Method to read from the database and display
-     * the number of puns needed.
-     * @param int $n Number of puns needed
-     **/
-     
-    public function displayPuns($n){
-     
-    }
+   
     /**
      * Method to return the pun-of-the-day depending
      * on the current date
@@ -191,7 +181,16 @@ private $db;
      
      }
      
+     /**
+      * Method to return a specific challenge numebr
+      */ 
      
+     public function getChallengeByNumber($table,$num){
+     	$sql = "SELECT * FROM `{$table}_challenge` WHERE `{$table}_id` = '$num'";
+          if($result = $this->db->queryRow($sql) ){
+          return $result;     
+     	}
+     }
      /**
       * Method to return all related info for current
       * challenge based on the parameter. Either from
@@ -287,18 +286,64 @@ private $db;
     $formData['image'] = $this->convertImage($image);
     // Need to get this to query the database and check whether the week has been taken
     // and then if so it will need to increase the week number by 1
-    $latestPost = $this->db->queryRow("SELECT `id`, `week` FROM `image_challenge` ORDER BY id DESC LIMIT 1");
-   
+    $latestPost = $this->db->queryRow("SELECT `image_id`, `week` FROM `image_challenge` ORDER BY image_id DESC LIMIT 1");
+   //die(var_dump($latestPost));
     // Setting the week for the newest post
     $formData['week'] = $latestPost['week'] + 1;
     // Run the insert method to insert the image to the database
-    if($this->db->insert("image_challenge", $formData, $successMessage) ){
-    return $successMessage;
+     if($this->db->insert($table , $formData, 'username') ){
+	    return true;
     }
     
    }
      
-    
+    public function displayArchive($table){
+    	if($table == 'topic' || $table =='image'){
+    		// Get current week
+    		date_default_timezone_set("Pacific/Auckland");
+        $currentWeek = date('W');
+    		// Query to get info from the challenge table
+    		$sql = "SELECT `{$table}_id`,`$table` FROM `{$table}_challenge` WHERE week < $currentWeek";
+    		//die(var_dump($sql));
+    		$sql2 = "SELECT username, {$table}_id, rating FROM {$table}_pun_post ORDER BY rating DESC";
+    		// Query both rows and save as variables
+    		$challengeDetails = $this->db->queryRows($sql);
+    		$winnerDetails = $this->db->queryRows($sql2);
+    		// Now match and combine the results to fit, IE. Get rid of the other winnerDetails
+    		for ($i=0;$i < count($challengeDetails); $i++){
+    			$challengeDetails[$i]['username'] = $winnerDetails[$i]['username'];
+    		}
+    		if($table == 'topic'){
+	    		for ($row = 0; $row < count($challengeDetails); $row++){
+	                            echo "<tr>";
+	                        
+	                            foreach($challengeDetails[$row] as $key => $value)
+	                            {
+	                                echo "<td>".$value."</td>";
+	                            }
+	                            echo "</tr>";
+	   	}}else{
+	   		for ($row = 0; $row < count($challengeDetails); $row++){
+	                            echo "<tr>";
+	                        
+	                               //die(var_dump($challengeDetails[$row]['image']));
+	                                echo "<td>".$challengeDetails[$row][$table."_id"]."</td>";
+	                                echo "<td><img src=".$challengeDetails[$row]['image']." /></td>";
+	                                echo "<td>".$challengeDetails[$row]['username']."</td>";
+	                            
+	                            echo "</tr>";
+	   		
+	   		
+	   	}
+    		
+    		
+    	}
+    	}
+	   	else{
+    		return 'Table must be either topic or image';
+    	}
+    	
+    }
     
     
 }

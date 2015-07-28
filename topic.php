@@ -19,7 +19,7 @@ if($_POST){
         $id['id'] = $data['id'];
           if($puns->removePun($table, $id)){
             $message = "Pun deleted";
-            header('Location: /home.php?message='.$message);
+            header('Location: /topic.php?message='.$message);
           }
         }elseif(array_key_exists('edit', $data)){
           
@@ -35,8 +35,9 @@ if($_POST){
   }elseif($_GET['rating'] == 'down'){
      $puns->ratePun();
   }
-}    
+}
 ?>
+
  <!-- Page Content -->
     <div class="container page-content text-center">
         <?php if($_GET['pun']=='yes'):?>
@@ -47,9 +48,9 @@ if($_POST){
       <div class="popup"><p><?= $_GET['message']?></p> </div>
       <?php endif; ?>
       <div class="topic challenge">
-       <h2><a href="?topic_challenge3">Topic Challenge #<?=$databaseQueries->getChallenge("topic_challenge")['topic_id'] ?><br><?= $databaseQueries->getChallenge("topic_challenge")['topic']?></a></h2>
-        <a href="?previoustopic"><i class="fa fa-chevron-left pull-left fa-2"></i></a>
-        <a href="?anothertopic"><i class="fa fa-chevron-right pull-right fa-2"></i></a>
+       <h2>Topic Challenge #<?=$_GET['topic']?><br><?= $databaseQueries->getChallengeByNumber("topic",$_GET['topic'])['topic']?></h2>
+        <a href="?topic=<?=$_GET['topic']-1?>"><i class="fa fa-chevron-left pull-left fa-2"></i></a>
+        <a href="?topic=<?=$_GET['topic']+1?>"><i class="fa fa-chevron-right pull-right fa-2"></i></a> 
         <form class="pun-input" method="post">
           <div class="form-group">
               <input type="text" class="form-control text-center" name="pun-topic" value="<?= $data['pun-topic']?>" placeholder="Post your pun here" required></input>
@@ -60,8 +61,8 @@ if($_POST){
         <hr class="hr-fade">
         
          <?php
-         $totalPuns = $puns->totalPuns('topic');
-         $puns->getPuns($totalPuns,'topic');
+         $totalPuns = $puns->totalPuns('topic',$_GET['topic']);
+         $puns->getPunsById($totalPuns,'topic',$_GET['topic']);
 
 include('footer.php');
 ?>

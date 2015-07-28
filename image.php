@@ -19,7 +19,7 @@ if($_POST){
         $id['id'] = $data['id'];
           if($puns->removePun($table, $id)){
             $message = "Pun deleted";
-            header('Location: /home.php?message='.$message);
+            header('Location: /topic.php?message='.$message);
           }
         }elseif(array_key_exists('edit', $data)){
           
@@ -47,11 +47,11 @@ if($_POST){
       <div class="popup"><p><?= $_GET['message']?></p> </div>
       <?php endif; ?>
       <div class="image challenge">
-         <h2><a href="?image-challenge3">Image Challenge #<?= $databaseQueries->getChallenge("image_challenge")['image_id']?></a></h2>
+          <h2>Image Challenge #<?=$_GET['image']?></h2>
         
-        <a href="?previousimage"><i class="fa fa-chevron-left pull-left fa-2"></i></a>
-        <a href="?anotherimage"><i class="fa fa-chevron-right pull-right fa-2"></i></a>
-        <img class="grayscale img-responsive" src="<?=$databaseQueries->getChallenge("image_challenge")['image'];?>"/>
+         <a href="?image=<?=$_GET['image']-1?>"><i class="fa fa-chevron-left pull-left fa-2"></i></a>
+        <a href="?image=<?=$_GET['image']+1?>"><i class="fa fa-chevron-right pull-right fa-2"></i></a> 
+        <img class="grayscale img-responsive" src="<?=$databaseQueries->getChallengeByNumber("image",$_GET['image'])['image'];?>"/>
         <form class="pun-input" method="post">
           <div class="form-group">
               <input type="text" class="form-control text-center" name="pun-image" value="<?= $data['pun-image']?>" placeholder="Post your pun here" required></input>
@@ -62,8 +62,8 @@ if($_POST){
         <hr class="hr-fade">
         
          <?php
-         $totalPuns = $puns->totalPuns('image');
-         $puns->getPuns($totalPuns,'image');
+         $totalPuns = $puns->totalPuns('image',$_GET['image']);
+         $puns->getPunsById($totalPuns,'image',$_GET['image']);
 
 include('footer.php');
 ?>

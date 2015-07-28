@@ -20,7 +20,7 @@ include('header.php');
                 </div>
             </form>
             <div class="table-responsive">
-                <table class="table table-hover">
+               <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Challenge Number</th>
@@ -29,21 +29,10 @@ include('header.php');
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td><img src="http://placehold.it/250x150"></img></td>
-                            <td>johncarter</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td><img src="http://placehold.it/250x150"></img></td>
-                            <td>peterparker</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td><img src="http://placehold.it/250x150"></img></td>
-                            <td>johnrambo</td>
-                        </tr>
+                        <?php
+                        $databaseQueries->displayArchive('image');
+                        ?>
+                        
                     </tbody>
                 </table>
             </div>

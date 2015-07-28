@@ -3,7 +3,7 @@ require_once('authenticator.php');
 include('header.php');
 $authenticator = new AuthenticatorHelper();
 if($authenticator->isAuthenticated()){
-$message = "Welcome";
+$message = "Welcome ".$_SESSION['username'];
 header('Location: /home.php?message='.$message);
 }?>
 

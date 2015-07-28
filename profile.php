@@ -49,7 +49,7 @@ if($_GET){
 }    
 ?>
  <!-- Page Content -->
-    <div class="container page-content text-center">`
+    <div class="container page-content text-center">
     <?php if($_GET['bio']=='yes'):?>
         <div class="popup"><p>Biography update successful.</p> </div>
       <?php elseif($_GET['bio']=='no'):?>
@@ -75,7 +75,7 @@ if($_GET){
               </div>
                
             </div>
-             <?php if($_SESSION['username'] == $_GET['username']):?>
+             <?php if($_SESSION['username'] == $_GET['username'] || $_SESSION['user']['admin']):?>
              <div class="row">
               <form class="pull-left" method="post" enctype="multipart/form-data">
                     <label class="pull-left" for="fileToUpload">Select image to upload:</label>

@@ -5,9 +5,11 @@ require_once('database.php');
 class PunsHelper{
     
     private $db;
+    private $dbq; 
     
     public function PunsHelper(){
         $this->db = new DatabaseHelper();
+        $this->dbq = new DatabaseQueries();
     }
     
     /**
@@ -17,25 +19,49 @@ class PunsHelper{
      *  Either topic or image
      */
      
-    public function getPuns($num, $table){
-        //$challengeTable = $table.'_challenge';
-        //$punTable = $table.'_pun_post';
+    public function getCurrentPuns($num, $table){
+        $id = $this->dbq->getChallenge($table.'_challenge')['topic_id'];
         if($table == 'topic' || $table == 'image'){
         $sql = "SELECT ".$table.", pun, username, rating, date, id
           FROM ".$table."_challenge
           JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
+          WHERE ".$table."_pun_post.".$table."_id = '$id'
           ORDER BY rating DESC";
+          
+          
        }else{
             echo 'Table must be either topic or image';
         }
         $errorMessage = 'Error getting puns';
   $this->punTemplate($sql,$table,$num, $errorMessage);
    
-        
-        
     }
     
     
+    public function getPunsById($num,$table,$id=null){
+        if($table == 'topic' || $table == 'image'){
+            if($id){
+                $sql = "SELECT ".$table.", pun, username, rating, date, id
+                FROM ".$table."_challenge
+                JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
+                WHERE {$table}_challenge.{$table}_id = $id
+                ORDER BY rating DESC"; 
+            }else{
+                $sql = "SELECT ".$table.", pun, username, rating, date, id
+                FROM ".$table."_challenge
+                JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id 
+                ORDER BY rating DESC";
+            }
+        
+       }else{
+            echo 'Table must be either topic or image';
+        }
+        
+        $errorMessage = 'Error getting puns';
+  $this->punTemplate($sql,$table,$num, $errorMessage);
+   
+    }
+
     public function updatePun($table, $data, $whereVal){
         $table = $table."_pun_post";
         
@@ -66,7 +92,7 @@ class PunsHelper{
         {
            //If there are less than 3 items in the array, change
            // $num to be the same as the length of the array.
-           if(count($punData)<$num){
+           if(count($punData) < $num){
                $num = count($punData);
            }
                
@@ -82,7 +108,7 @@ class PunsHelper{
               <div class="rating-group">
                 <i class="fa fa-thumbs-up fa-2"></i>
                 <i class="fa fa-thumbs-down fa-2"></i>
-                <a href="#" class="rating-number">'.$data["rating"].'</a>
+                <span class="rating-number">'.$data["rating"].'</span>
               </div>          
             </div>
             <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
@@ -101,15 +127,24 @@ class PunsHelper{
      * are in the database based on parameter
      * @param string $table Table to receive puns from.
      */ 
-    public function totalPuns($table){
-        
+    public function totalPuns($table,$id){
+      
         if($table == 'topic' | $table == 'image'){
-            $sql = "SELECT pun
-  FROM ".$table."_challenge
-  JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id ";
+            if($id){
+             $sql = "SELECT pun
+              FROM ".$table."_challenge
+              JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id
+              WHERE ".$table."_pun_post.".$table."_id = '$id'";   
+            }else{
+               $sql = "SELECT pun
+              FROM ".$table."_challenge
+              JOIN ".$table."_pun_post ON ".$table."_pun_post.".$table."_id = ".$table."_challenge.".$table."_id";   
+            }
+            
         }else{
             return "Error: table needs to be either topic_challenge or image_challenge";
         }
+        
         if($totalPuns = $this->db->queryRows($sql))
         {return $totalPuns = count($totalPuns);
         }else{
@@ -118,7 +153,7 @@ class PunsHelper{
        
     }
     
-    
+     
     public function findPunById(){
         
         $table = $_GET['table'];
@@ -209,7 +244,11 @@ class PunsHelper{
     
      private function punTemplate($sql, $table, $num, $errorMessage){
         if($punData = $this->db->queryRows($sql)){
-           
+          //If there are less than 3 items in the array, change
+           // $num to be the same as the length of the array.
+           if(count($punData) < $num){
+               $num = count($punData);
+           }
             // Now iterate over this data based on $num and output the HTML template
             for($i = 0; $i < $num; $i++){
             $data = $punData[$i];    
@@ -222,12 +261,12 @@ class PunsHelper{
               <form method="get">
                 <a href="?table='.$table.'&id='.$data['id'].'&rating=up&currentRating='.$data['rating'].'"><i class="fa fa-thumbs-up fa-2"></i></a>
                 <a href="?table='.$table.'&id='.$data['id'].'&rating=down&currentRating='.$data['rating'].'"><i class="fa fa-thumbs-down fa-2"></i></a>
-                <a href="#" class="rating-number">'.$data["rating"].'</a>
+                <span class="rating-number">'.$data["rating"].'</span>
                 </form>
               </div>          
             </div>
             <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
-            ';if($_SESSION["username"] == $data["username"]){
+            ';if($_SESSION["username"] == $data["username"] || $_SESSION['user']["admin"] == true){
                 echo'
             <form method="POST">
             <input type="submit" class="btn btn-danger" name="delete" value="delete">

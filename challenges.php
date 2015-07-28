@@ -24,7 +24,7 @@ if($_POST){
       <div class="popup"><p>Pun post un-successful</p> </div>
       <?php endif; ?>
       <div class="topic challenge">
-        <h2><a href="?topic-challenge3">Topic Challenge #<?=$databaseQueries->getChallenge("topic_challenge")['topic_id'] ?><br><?= $databaseQueries->getChallenge("topic_challenge")['topic']?></a></h2>
+        <h2><a href="admin.php?action=topic">Topic Challenge #<?=$databaseQueries->getChallenge("topic_challenge")['topic_id'] ?><br><?= $databaseQueries->getChallenge("topic_challenge")['topic']?></a></h2>
         <form class="pun-input" method="post">
           <div class="form-group">
               <input type="text" class="form-control text-center" name="pun-topic" value="<?= $data['pun-topic']?>" placeholder="Post your pun here" required></input>
@@ -34,7 +34,7 @@ if($_POST){
       </div>
       <hr class="hr-fade">
       <div class="image challenge">
-         <h2><a href="?image_challenge3">Image Challenge #<?= $databaseQueries->getChallenge("image_challenge")['image_id']?></a></h2>
+         <h2><a href="admin.php?action=image-page">Image Challenge #<?= $databaseQueries->getChallenge("image_challenge")['image_id']?></a></h2>
         <img class="grayscale img-responsive" src="<?=$databaseQueries->getChallenge("image_challenge")['image'];?>"/>
         <form class="pun-input" method="post">
           <div class="form-group">
