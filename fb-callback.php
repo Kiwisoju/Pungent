@@ -102,8 +102,3 @@ $picture = "https://graph.facebook.com/{$user_id}/picture?type=large";
 // Otherwise creates an instance of user in table.
 // Then redirected to the home page.
 $databaseQueries->addFbUser($user, $picture);
-
-
-
-
-?>

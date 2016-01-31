@@ -12,31 +12,31 @@ if(!($authenticator->isAdmin() )){
 
 switch($_GET['action']){
 	case'home':
-		header('Location: /home.php');
+		header('Location: home.php');
 		break;
     case'challenges':
-		header('Location: /challenges.php');
+		header('Location: challenges.php');
 		break;
 	case'topic':
-		header('Location: /topic.php?topic='.$databaseQueries->getChallenge('topic_challenge')['topic_id']);
+		header('Location: topic.php?topic='.$databaseQueries->getChallenge('topic_challenge')['topic_id']);
 		break;
 	case'topic-archive':
-		header('Location: /topic-archive.php');
+		header('Location: topic-archive.php');
 		break;
 	case'image-page':
-		header('Location: /image.php?image='.$databaseQueries->getChallenge('image_challenge')['image_id']);
+		header('Location: image.php?image='.$databaseQueries->getChallenge('image_challenge')['image_id']);
 		break;
 	case'image-archive':
-		header('Location: /image-archive.php');
+		header('Location: image-archive.php');
 		break;
 	case'about':
-		header('Location: /about.php');
+		header('Location: about.php');
 		break;
 	case'profile':
-		header('Location: /profile.php?username='.$_SESSION['username']);
+		header('Location: profile.php?username='.$_SESSION['username']);
 		break;
 	case'sitemap':
-		header('Location: /sitemap.php');
+		header('Location: sitemap.php');
 		break;	
 }
     
@@ -50,8 +50,8 @@ if($_POST){
         $table = $data['table'];
         $id['id'] = $data['id'];
         if($databaseQueries->removePun($table, $id)){
-            $message = "Pun deleted";
-            header('Location: /admin.php?message='.$message);
+            $message = "Pun deleted potato";
+            header('Location: admin.php?message='.$message);
         }
     }
 }

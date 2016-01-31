@@ -241,7 +241,7 @@ class PunsHelper{
                 </form>
               </div>          
             </div>
-            <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
+            <p class="username pull-right"><a href="/pungent/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
             ';if($_SESSION["username"] == $data["username"] || $_SESSION['user']["admin"] == true){
                 echo'
             <form method="POST">

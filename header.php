@@ -1,13 +1,14 @@
 <?php
-
+ob_start();
 require_once('authenticator.php');
 require_once('database-queries.php');
 $authenticator = new AuthenticatorHelper();
 $database = new DatabaseHelper();
 $databaseQueries = new DatabaseQueries();
 // Abstracting the custom stylesheets.
-$stylesheet = substr($_SERVER['PHP_SELF'], 0, -4);
- 
+$url = substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], '/') + 1);
+$stylesheet = substr($url, 0, -4);
+
 ?>
 <html>
 <head>
@@ -20,23 +21,7 @@ $stylesheet = substr($_SERVER['PHP_SELF'], 0, -4);
   <title>Pungent</title>
  
   <!-- Favicon -->
-  <link rel="apple-touch-icon" sizes="57x57" href="images/favicon/apple-icon-57x57.png">
-  <link rel="apple-touch-icon" sizes="60x60" href="images/favicon/apple-icon-60x60.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="images/favicon/apple-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="76x76" href="images/favicon/apple-icon-76x76.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="images/favicon/apple-icon-114x114.png">
-  <link rel="apple-touch-icon" sizes="120x120" href="images/favicon/apple-icon-120x120.png">
-  <link rel="apple-touch-icon" sizes="144x144" href="images/favicon/apple-icon-144x144.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="images/favicon/apple-icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-icon-180x180.png">
-  <link rel="icon" type="image/png" sizes="192x192"  href="images/favicon/android-icon-192x192.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="images/favicon/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
-  <link rel="manifest" href="images/favicon/manifest.json">
-  <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="images/favicon/ms-icon-144x144.png">
-  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" type="image/png" href="images/favicon.png"/>
   
   <!-- Bootstrap Core CSS -->
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -46,8 +31,8 @@ $stylesheet = substr($_SERVER['PHP_SELF'], 0, -4);
 
   <!-- Custom CSS -->
   <link href='//fonts.googleapis.com/css?family=Arizonia|Open+Sans' rel='stylesheet' type='text/css'>
-  <link href="/css/main.css" rel="stylesheet" type="text/css">
-  <link href="/css<?=$stylesheet?>-styles.css" rel="stylesheet" type="text/css">
+  <link href="css/main.css" rel="stylesheet" type="text/css">
+  <link href="css/<?=$stylesheet?>-styles.css" rel="stylesheet" type="text/css">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

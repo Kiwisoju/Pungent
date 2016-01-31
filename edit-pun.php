@@ -20,7 +20,7 @@ if(array_key_exists( 'pun', $_POST)){
     $data = $_POST;
      if($databaseQueries->updatePun($table, $data, $whereVal)){
          $message = 'Pun successfully updated';
-         header("Location: /home.php?message=".$message);
+         header("Location: /pungent/home.php?message=".$message);
      }
 }
 ?>

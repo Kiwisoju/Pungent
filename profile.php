@@ -2,14 +2,12 @@
 // Require security helpers
 require_once('authenticator.php');
 require_once('database-queries.php');
-require_once('puns.php');
 require_once('upload.php');
 $authenticator = new AuthenticatorHelper();
 // Secured content, redirect unauthenticated users
 $authenticator->redirectUnauthenticatedUser();
 //$db = new DatabaseHelper();
 $databaseQueries = new DatabaseQueries();
-$puns = new PunsHelper();
 $uploadImage = new UploadHelper();
 include('header.php');
 
@@ -29,7 +27,7 @@ if($_POST){
         $table = $data['table'];
         $id['id'] = $data['id'];
         die(var_dump($data));
-          if($puns->removePun($table, $id)){
+          if($databaseQueries->removePun($table, $id)){
             $message = "Pun deleted";
             header('Location: /home.php?message='.$message);
           }
@@ -42,9 +40,9 @@ if($_GET){
   if($_GET['rating'] == 'up')
   {
     
-  $puns->ratePun();
+  $databaseQueries->ratePun();
   }elseif($_GET['rating'] == 'down'){
-     $puns->ratePun();
+     $databaseQueries->ratePun();
   }
 }    
 ?>
@@ -100,7 +98,7 @@ if($_GET){
         
         <h2>Best Puns</h2>
         
-        <?php $puns->getUserPuns($_GET['username']);
+        <?php $databaseQueries->getUserPuns($_GET['username']);
                 
 
 include('footer.php');

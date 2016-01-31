@@ -33,7 +33,7 @@ private $db;
 					//Inserting user to the database and redirecting
 					$this->db->insert('users',$formData,"User successfully added");
 					$message = "User successfully added";
-					exit(header("Location: /index.php?message=".$message));
+					exit(header("Location: /pungent/index.php?message=".$message));
 		    }else{
 		    	$message = "User already taken";
 		    }
@@ -64,7 +64,7 @@ private $db;
         $_SESSION['username'] = $username;
         $this->uploadImage('users',$picture);
         $message = "Welcome {$username}";
-        exit(header("Location: /home.php?message=".$message));
+        exit(header("Location: /pungent/home.php?message=".$message));
 	    }
 		}
 		
@@ -126,10 +126,10 @@ private $db;
     	$username = $_SESSION['username'];
 			if( $this->db->update('users', $data, 'username', $username) ){
   			//redirect success
-  			header('Location: /profile.php?username='.$username.'&bio=yes');
+  			header('Location: /pungent/profile.php?username='.$username.'&bio=yes');
 			}else{
 				//redirect failure
-				header('Location: /profile.php?username='.$username.'&bio=no');
+				header('Location: /pungent/profile.php?username='.$username.'&bio=no');
 			}
     }
     
@@ -167,7 +167,7 @@ private $db;
 			if($this->db->insert($table, $data,"Pun succesfully posted") ){
 				//Redirect with successmessage
 				$section = substr($_SERVER['PHP_SELF'], 1);
-				header('Location: /'.$section.'?pun=yes');	
+				header('Location: /'.$section.'/?pun=yes');	
 				
 			}else{
 				return 'failed';
@@ -440,7 +440,7 @@ private $db;
      */
      
     public function getCurrentPuns($num, $table){
-        $id = $this->getChallenge($table.'_challenge')['topic_id'];
+        $id = $this->getChallenge($table.'_challenge')[$table.'_id'];
         if($table == 'topic' || $table == 'image'){
         $sql = "SELECT ".$table.", pun, username, rating, date, id
           FROM ".$table."_challenge
@@ -669,7 +669,7 @@ private $db;
               </form>
             </div>          
           </div>
-          <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
+          <p class="username pull-right"><a href="/pungent/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
           ';if($_SESSION["username"] == $data["username"] || $_SESSION['user']["admin"] == true){
               echo'
           <form method="POST">

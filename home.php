@@ -20,7 +20,7 @@ if($_POST){
           }
         }elseif(array_key_exists('edit', $data)){
           
-          header('Location: /edit-pun.php?table='.$data['table'].'&id='.$data['id']);
+          header('Location: /pungent/edit-pun.php?table='.$data['table'].'&id='.$data['id']);
         }else{
         $databaseQueries->addPun($data);}
     }
