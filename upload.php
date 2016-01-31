@@ -3,6 +3,7 @@ require_once('database.php');
 require_once('database-queries.php');
 class UploadHelper{
 
+
 private $db;
 private $dbq;
 
