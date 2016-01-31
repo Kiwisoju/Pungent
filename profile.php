@@ -65,13 +65,6 @@ if($_GET){
             <?php else: ?>   
             <img id="profile-image" class="pull-left" src="http://placehold.it/200x200"></img>
             <?php endif; ?>
-              <div class="pull-right header-dropshadow" id="badges-container">
-                  <h3>Badges</h3>
-                  <img src="http://placehold.it/50x50"></img>
-                  <img src="http://placehold.it/50x50"></img>
-                  <img src="http://placehold.it/50x50"></img>
-              </div>
-               
             </div>
              <?php if($_SESSION['username'] == $_GET['username'] || $_SESSION['user']['admin']):?>
              <div class="row">

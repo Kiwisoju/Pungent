@@ -17,7 +17,7 @@
     </ul>
     <div class="row">
       <div class="col-lg-12">
-        <p>Copyright &copy; Pungent 2015</p>
+        <p>Copyright &copy; Pungent <?php echo date("Y")?></p>
       </div>
     </div>
     <!-- /.row -->

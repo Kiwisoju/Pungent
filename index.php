@@ -17,7 +17,7 @@ include('header.php');
 $authenticator = new AuthenticatorHelper();
 if($authenticator->isAuthenticated()){
   $message = "Welcome ".$_SESSION['username'];
-  header('Location: /pungent/home.php?message='.$message);
+  header('Location: home.php?message='.$message);
 }?>
 
 <?php if($_GET['message']):?>
