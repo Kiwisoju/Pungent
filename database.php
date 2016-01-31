@@ -26,13 +26,13 @@ class DatabaseHelper{
     // Connect and select database
     $servername = getenv('IP');
     $username = getenv('C9_USER');
-    $password = "Ch4ng3m3#";
-    $database = "Pungent";
+    $password = "";
+    $database = "pungent";
     $dbport = 3306;
 
     
-    if(!$password)
-      throw new Exception('No password set for database');
+    // if(!$password)
+    //   throw new Exception('No password set for database');
     
     // Create connection
     $mysqli = new mysqli($servername, $username, $password, $database, $dbport);
