@@ -1,21 +1,23 @@
 <?php
 session_start();
 include('header.php');
+include('puns.php');
+include('pun-spider.php');
 ?>
 <!-- Page Content -->
     <div class="container page-content text-center">
       <?php if($_GET['not-admin']=='yes'):?>
-        <div class="popup"><p>Sorry, you don't have permission to enter that page.</p> </div>
+        <div class="well pop-up"><p>Sorry, you don't have permission to enter that page.</p> </div>
       <?php elseif($_GET['message']):?>
-        <div class="popup"><p><?= $_GET['message']?></p> </div>
+        <div class="well pop-up"><p><?= $_GET['message']?></p> </div>
       <?php elseif($_GET['pun']=='yes'):?>
-        <div class="popup"><p>Pun post successful!</p> </div>
+        <div class="well pop-up"><p>Pun post successful!</p> </div>
       <?php elseif($_GET['pun']=='no'): ?>
-        <div class="popup"><p>Pun post un-successful</p> </div>
+        <div class="well pop-up"><p>Pun post un-successful</p> </div>
       <?php endif; ?>
       <div class="pun-of-the-day">
         <h2>Pun of the day</h2>
-        <p><?= $databaseQueries->punOfTheDay();?></p>
+        <p><?= crawl_page("http://www.punoftheday.com/");?></p>
       </div>
       <hr class="hr-fade">
       <div class="topic challenge">
