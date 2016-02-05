@@ -6,38 +6,30 @@ require_once('database-queries.php');
 $authenticator = new AuthenticatorHelper();
 $databaseQueries = new DatabaseQueries();
 if(!($authenticator->isAdmin() )){
-    header('Location: /home.php?not-admin=yes');
-   
+    header('Location: /index.php?not-admin=yes');
 }
-
 switch($_GET['action']){
-	case'home':
-		header('Location: /home.php');
+	case 'home':
+		header('Location: index.php');
 		break;
-    case'challenges':
-		header('Location: /challenges.php');
+	case 'topic':
+		header('Location: topic.php?topic='.$databaseQueries->getChallenge('topic_challenge')['topic_id']);
 		break;
-	case'topic':
-		header('Location: /topic.php?topic='.$databaseQueries->getChallenge('topic_challenge')['topic_id']);
+	case 'image-page':
+		header('Location: image.php?image='.$databaseQueries->getChallenge('image_challenge')['image_id']);
 		break;
-	case'topic-archive':
-		header('Location: /topic-archive.php');
+	case 'about':
+		header('Location: about.php');
 		break;
-	case'image-page':
-		header('Location: /image.php?image='.$databaseQueries->getChallenge('image_challenge')['image_id']);
+	case 'profile':
+		header('Location: profile.php?username='.$_SESSION['username']);
 		break;
-	case'image-archive':
-		header('Location: /image-archive.php');
+	case 'sitemap':
+		header('Location: sitemap.php');
 		break;
-	case'about':
-		header('Location: /about.php');
-		break;
-	case'profile':
-		header('Location: /profile.php?username='.$_SESSION['username']);
-		break;
-	case'sitemap':
-		header('Location: /sitemap.php');
-		break;	
+    case 'login':
+        header('Location: login.php');
+        break;
 }
     
 if($_POST){
@@ -51,7 +43,7 @@ if($_POST){
         $id['id'] = $data['id'];
         if($databaseQueries->removePun($table, $id)){
             $message = "Pun deleted";
-            header('Location: /admin.php?message='.$message);
+            header('Location: admin.php?message='.$message);
         }
     }
 }

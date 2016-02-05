@@ -343,13 +343,14 @@
             if(options.backgroundactive){
                 //calculates the vertical align
                 $el.css({
-                    top:(
-                        $window.height() - (
-                            $el.get(0).offsetHeight +
-                            parseInt($el.css('margin-top'), 10) +
-                            parseInt($el.css('margin-bottom'), 10)
-                        )
-                    )/2 +'px'
+                    top: '300px'
+                    // (
+                    //     $window.height() - (
+                    //         $el.get(0).offsetHeight +
+                    //         parseInt($el.css('margin-top'), 10) +
+                    //         parseInt($el.css('margin-bottom'), 10)
+                    //     )
+                    // )/2 +'px'
                 });
             }
 

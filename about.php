@@ -1,10 +1,4 @@
 <?php
-// Require security helpers
-require_once('authenticator.php');
-$authenticator = new AuthenticatorHelper();
-// Secured content, redirect unauthenticated users
-$authenticator->redirectUnauthenticatedUser();
-//$db = new DatabaseHelper();
 include('header.php');
 ?>
  <!-- Page Content -->
@@ -14,10 +8,9 @@ include('header.php');
           <p>Pungent is a socially moderated pun competition.<br><br><br> What does that
           mean? <br><br>It means that each week there will be a topic and image based
           challenge for all users to post their puns. These will be rated
-          by your fellow punters and at the end of each week a winner will emerge!<br><br>
+          by your fellow punters, get to the top of the list!<br><br>
           That's about it..
           </p>
         </div>
 <?php
 include('footer.php');
-?>

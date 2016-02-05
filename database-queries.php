@@ -1,13 +1,16 @@
 <?php
+require_once('authenticator.php');
 require_once('database.php');
 
 class DatabaseQueries{
     
-private $db;    
+private $db;
+private $authenticator;
 
     //instantiates a connection to the database
     public function DatabaseQueries(){
     $this->db = new DatabaseHelper();  
+    $this->authenticator = new AuthenticatorHelper();
     }
     
     /**
@@ -24,6 +27,7 @@ private $db;
 		    //Getting the formData ready for insert. Removing matching
 		    //password, hashing password and inserting username
 		    unset($formData['password-match']);    
+		    $password = $formData['password'];
         $formData['password']=password_hash($formData['password'], PASSWORD_DEFAULT );
 		    
 		    // Checking if username already exists, if not then insert to database, otherwise
@@ -33,39 +37,14 @@ private $db;
 					//Inserting user to the database and redirecting
 					$this->db->insert('users',$formData,"User successfully added");
 					$message = "User successfully added";
-					exit(header("Location: /index.php?message=".$message));
+					// Log user in then redirect
+					$this->authenticator->login($username, $password);
+					exit(header("Location: index.php?message=".$message));
 		    }else{
 		    	$message = "User already taken";
 		    }
 			}
 		  header( "Location: ?message=".$message );
-		}
-			
-		/** 
-		 * Method to add user to the database
-		 * who is logging in with their facebook account
-		 * 
-		 * @param string $formData Their username
-		 * @param string $picture Link to their profile picture
-		 **/ 
-		 
-		public function addFbUser($formData, $picture){
-      $username = $formData['name'];
-      $sql = "SELECT username FROM users WHERE username = '{$username}'";
-      // Checking if there is a match with usernames
-      if(!($this->db->queryRow($sql) )){
-        //Inserting user to the database and redirecting
-        $fbUser['username'] = $formData['name'];
-        $this->db->insert('users',$fbUser,"User successfully added");
-        $message = "User successfully added"; 
-      }
-      else{
-        $_SESSION['loggedIn'] = true;
-        $_SESSION['username'] = $username;
-        $this->uploadImage('users',$picture);
-        $message = "Welcome {$username}";
-        exit(header("Location: /home.php?message=".$message));
-	    }
 		}
 		
 		/**
@@ -126,10 +105,10 @@ private $db;
     	$username = $_SESSION['username'];
 			if( $this->db->update('users', $data, 'username', $username) ){
   			//redirect success
-  			header('Location: /profile.php?username='.$username.'&bio=yes');
+  			header('Location: /pungent/profile.php?username='.$username.'&bio=yes');
 			}else{
 				//redirect failure
-				header('Location: /profile.php?username='.$username.'&bio=no');
+				header('Location: /pungent/profile.php?username='.$username.'&bio=no');
 			}
     }
     
@@ -152,27 +131,39 @@ private $db;
      */
      
     public function addPun($data){
-     	$type = ( isset($data['pun-topic']) ) ? 'topic' : 'image';
-     	$table = "{$type}_pun_post";
-			$data["pun"] = $data["pun-{$type}"];
-			$data["{$type}_id"] = $this->getChallenge("{$type}_challenge")["{$type}_id"];
-			unset($data["pun-{$type}"]);
-    	
-			//Setting up the rest of the formData
-			// To get the topic-id the pun post was set for..
-			$data["username"] = $_SESSION['username'];
-			$data["rating"] = 0;
-			
-			//Inserting data into the database
-			if($this->db->insert($table, $data,"Pun succesfully posted") ){
-				//Redirect with successmessage
-				$section = substr($_SERVER['PHP_SELF'], 1);
-				header('Location: /'.$section.'?pun=yes');	
-				
-			}else{
-				return 'failed';
-			}
-			
+      // Checking if user is authenticated
+      $url = '?';
+      
+      if($_GET['topic']){
+        $url = '?topic=' . $_GET['topic'] . '&';  
+      }elseif($_GET['image']){
+        $url = '?image=' . $_GET['image']  . '&';
+      }
+      
+      if($this->authenticator->isAuthenticated() ){
+        $type = ( isset($data['pun-topic']) ) ? 'topic' : 'image';
+       	$table = "{$type}_pun_post";
+  			$data["pun"] = $data["pun-{$type}"];
+  			$data["{$type}_id"] = $this->getChallenge("{$type}_challenge")["{$type}_id"];
+  			unset($data["pun-{$type}"]);
+      	
+  			//Setting up the rest of the formData
+  			// To get the topic-id the pun post was set for..
+  			$data["username"] = $_SESSION['username'];
+  			$data["rating"] = 0;
+  			
+  			//Inserting data into the database
+  			if($this->db->insert($table, $data,"Pun succesfully posted") ){
+  				//Redirect with success message
+  				header('Location: ?pun=yes');	
+  				
+  			}else{
+  				return 'failed';
+  			}
+      }else{
+        $message = 'You must be logged in to submit a pun';
+        header('Location: ' .$url . 'message=' . $message);
+      }
     }
     
     /**
@@ -440,7 +431,7 @@ private $db;
      */
      
     public function getCurrentPuns($num, $table){
-        $id = $this->getChallenge($table.'_challenge')['topic_id'];
+        $id = $this->getChallenge($table.'_challenge')[$table.'_id'];
         if($table == 'topic' || $table == 'image'){
         $sql = "SELECT ".$table.", pun, username, rating, date, id
           FROM ".$table."_challenge
@@ -609,9 +600,14 @@ private $db;
     }
     
     public function ratePun(){
+      
+      $table = $_GET['table'];
+      $id = $_GET['id'];
+      $url = '?table=' . $table . '&topic=' .$id;
+      
+      // Checking if user is authenticated
+      if($this->authenticator->isAuthenticated() ){
         $username = $_SESSION['username'];
-        $table = $_GET['table'];
-        $id = $_GET['id'];
         $rating = $_GET['rating'];
         $currentRating = $_GET['currentRating'];
         
@@ -622,14 +618,16 @@ private $db;
             $this->setRateIp($table, $id, $username);
             if($this->rate($table, $id, $username, $currentRating, $rating)){
                 $message = 'Pun has been rated';
-                header('Location: ?message='.$message);
-                
-            };
+            }
         }else{
             $message = 'You have already rated this pun';
-            header('Location: ?message='.$message);
         }
-        
+      }
+      else{
+        $message = 'You need to be logged in to vote';
+      }
+      
+      header('Location:' . $url . '&message='.$message);
         //if all clear then update the table to include your ip linked
         //with the correct id.
         
@@ -669,7 +667,7 @@ private $db;
               </form>
             </div>          
           </div>
-          <p class="username pull-right"><a href="/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
+          <p class="username pull-right"><a href="/pungent/profile.php?username='.$data["username"].'">'.htmlspecialchars($data["username"], ENT_COMPAT,'ISO-8859-1', true).'</a></p>
           ';if($_SESSION["username"] == $data["username"] || $_SESSION['user']["admin"] == true){
               echo'
           <form method="POST">
