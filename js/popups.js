@@ -6,11 +6,11 @@ require(['formValidation.min.js']);
 
 $(document).ready(function () {
 
-    $('.popup').popup({
+    $('.pop-up').popup({
       color: 'white',
       autoopen: true,
       opacity: 1,
       transition: '0.3s',
-      scrolllock: true
+      backgroundactive: true,
     });
 });
