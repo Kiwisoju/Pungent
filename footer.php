@@ -1,3 +1,4 @@
+      <?php if($url != 'signup.php'): ?>
       <!-- Footer -->
       <footer class="text-center">
         <ul class="nav navbar-nav">
@@ -14,13 +15,9 @@
             <a id="footer-links" href="admin.php?action=sitemap">Sitemap</a>
           </li>
         </ul>
-        <div class="row">
-          <div class="col-lg-12">
-            <p>Copyright &copy; Pungent <?php echo date("Y")?></p>
-          </div>
-        </div>
         <!-- /.row -->
-      </footer>
+      </footer><?php
+      endif; ?>
     </div>
 <!-- /.container -->
     <script src="js/jquery-1.11.3.min.js"></script>

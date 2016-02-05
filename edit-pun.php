@@ -1,14 +1,7 @@
 <?php
-// Require security helpers
-require_once('authenticator.php');
-require_once('database-queries.php');
-$authenticator = new AuthenticatorHelper();
-$database = new DatabaseHelper();
-$databaseQueries = new DatabaseQueries();
-// Secured content, redirect unauthenticated users
-$authenticator->redirectUnauthenticatedUser();
-//$db = new DatabaseHelper();
 include('header.php');
+
+$authenticator->redirectUnauthenticatedUser();
 
 if($_GET['table']=='topic')
 $table = $_GET['table'];
@@ -20,7 +13,7 @@ if(array_key_exists( 'pun', $_POST)){
     $data = $_POST;
      if($databaseQueries->updatePun($table, $data, $whereVal)){
          $message = 'Pun successfully updated';
-         header("Location: /pungent/home.php?message=".$message);
+         header("Location: pungent/index.php?message=".$message);
      }
 }
 ?>

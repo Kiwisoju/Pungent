@@ -61,8 +61,9 @@ $stylesheet = substr($url, 0, -4);
   </head>
   <body>
     <div class="container content"><?php
-    if($url != 'login.php'): ?>
-      <!-- Navigation -->
+    if($url == 'login.php' || $url == 'signup.php'): 
+    else: ?>
+    <!-- Navigation -->
       <nav class="navbar header header-dropshadow" id="nav" role="navigation">
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="text-center logo">

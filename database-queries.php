@@ -27,6 +27,7 @@ private $authenticator;
 		    //Getting the formData ready for insert. Removing matching
 		    //password, hashing password and inserting username
 		    unset($formData['password-match']);    
+		    $password = $formData['password'];
         $formData['password']=password_hash($formData['password'], PASSWORD_DEFAULT );
 		    
 		    // Checking if username already exists, if not then insert to database, otherwise
@@ -36,39 +37,14 @@ private $authenticator;
 					//Inserting user to the database and redirecting
 					$this->db->insert('users',$formData,"User successfully added");
 					$message = "User successfully added";
-					exit(header("Location: /pungent/index.php?message=".$message));
+					// Log user in then redirect
+					$this->authenticator->login($username, $password);
+					exit(header("Location: index.php?message=".$message));
 		    }else{
 		    	$message = "User already taken";
 		    }
 			}
 		  header( "Location: ?message=".$message );
-		}
-			
-		/** 
-		 * Method to add user to the database
-		 * who is logging in with their facebook account
-		 * 
-		 * @param string $formData Their username
-		 * @param string $picture Link to their profile picture
-		 **/ 
-		 
-		public function addFbUser($formData, $picture){
-      $username = $formData['name'];
-      $sql = "SELECT username FROM users WHERE username = '{$username}'";
-      // Checking if there is a match with usernames
-      if(!($this->db->queryRow($sql) )){
-        //Inserting user to the database and redirecting
-        $fbUser['username'] = $formData['name'];
-        $this->db->insert('users',$fbUser,"User successfully added");
-        $message = "User successfully added"; 
-      }
-      else{
-        $_SESSION['loggedIn'] = true;
-        $_SESSION['username'] = $username;
-        $this->uploadImage('users',$picture);
-        $message = "Welcome {$username}";
-        exit(header("Location: /pungent/home.php?message=".$message));
-	    }
 		}
 		
 		/**
@@ -188,9 +164,6 @@ private $authenticator;
         $message = 'You must be logged in to submit a pun';
         header('Location: ' .$url . 'message=' . $message);
       }
-      
-     	
-			
     }
     
     /**

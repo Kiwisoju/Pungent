@@ -47,11 +47,11 @@ if($_GET){
         <a class="btn btn-primary" href="pungent/login.php">Log in</a>
       </div><?php 
       else:  if($_GET['bio'] == 'yes'):?>
-        <div class="popup"><p>Biography update successful.</p> </div>
+        <div class="well pop-up"><p>Biography update successful.</p> </div>
       <?php elseif($_GET['bio'] == 'no'):?>
-        <div class="popup"><p>Error updating biography.</p> </div>
+        <div class="well pop-up"><p>Error updating biography.</p> </div>
         <?php elseif($_GET['message']):?>
-        <div class="popup"><p><?=$_GET['message']?></p> </div>
+        <div class="well pop-up"><p><?=$_GET['message']?></p> </div>
         <?php endif; ?>
         <div id="profile-container">
             <div class="row" id="profile-row">
