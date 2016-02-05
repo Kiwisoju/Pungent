@@ -42,7 +42,7 @@ if($_POST){
         $table = $data['table'];
         $id['id'] = $data['id'];
         if($databaseQueries->removePun($table, $id)){
-            $message = "Pun deleted potato";
+            $message = "Pun deleted";
             header('Location: admin.php?message='.$message);
         }
     }
