@@ -1,13 +1,16 @@
 <?php
+require_once('authenticator.php');
 require_once('database.php');
 
 class DatabaseQueries{
     
-private $db;    
+private $db;
+private $authenticator;
 
     //instantiates a connection to the database
     public function DatabaseQueries(){
     $this->db = new DatabaseHelper();  
+    $this->authenticator = new AuthenticatorHelper();
     }
     
     /**
@@ -152,26 +155,41 @@ private $db;
      */
      
     public function addPun($data){
-     	$type = ( isset($data['pun-topic']) ) ? 'topic' : 'image';
-     	$table = "{$type}_pun_post";
-			$data["pun"] = $data["pun-{$type}"];
-			$data["{$type}_id"] = $this->getChallenge("{$type}_challenge")["{$type}_id"];
-			unset($data["pun-{$type}"]);
-    	
-			//Setting up the rest of the formData
-			// To get the topic-id the pun post was set for..
-			$data["username"] = $_SESSION['username'];
-			$data["rating"] = 0;
-			
-			//Inserting data into the database
-			if($this->db->insert($table, $data,"Pun succesfully posted") ){
-				//Redirect with successmessage
-				$section = substr($_SERVER['PHP_SELF'], 1);
-				header('Location: /'.$section.'/?pun=yes');	
-				
-			}else{
-				return 'failed';
-			}
+      // Checking if user is authenticated
+      $url = '?';
+      
+      if($_GET['topic']){
+        $url = '?topic=' . $_GET['topic'] . '&';  
+      }elseif($_GET['image']){
+        $url = '?image=' . $_GET['image']  . '&';
+      }
+      
+      if($this->authenticator->isAuthenticated() ){
+        $type = ( isset($data['pun-topic']) ) ? 'topic' : 'image';
+       	$table = "{$type}_pun_post";
+  			$data["pun"] = $data["pun-{$type}"];
+  			$data["{$type}_id"] = $this->getChallenge("{$type}_challenge")["{$type}_id"];
+  			unset($data["pun-{$type}"]);
+      	
+  			//Setting up the rest of the formData
+  			// To get the topic-id the pun post was set for..
+  			$data["username"] = $_SESSION['username'];
+  			$data["rating"] = 0;
+  			
+  			//Inserting data into the database
+  			if($this->db->insert($table, $data,"Pun succesfully posted") ){
+  				//Redirect with success message
+  				header('Location: ?pun=yes');	
+  				
+  			}else{
+  				return 'failed';
+  			}
+      }else{
+        $message = 'You must be logged in to submit a pun';
+        header('Location: ' .$url . 'message=' . $message);
+      }
+      
+     	
 			
     }
     
@@ -609,9 +627,14 @@ private $db;
     }
     
     public function ratePun(){
+      
+      $table = $_GET['table'];
+      $id = $_GET['id'];
+      $url = '?table=' . $table . '&topic=' .$id;
+      
+      // Checking if user is authenticated
+      if($this->authenticator->isAuthenticated() ){
         $username = $_SESSION['username'];
-        $table = $_GET['table'];
-        $id = $_GET['id'];
         $rating = $_GET['rating'];
         $currentRating = $_GET['currentRating'];
         
@@ -622,14 +645,16 @@ private $db;
             $this->setRateIp($table, $id, $username);
             if($this->rate($table, $id, $username, $currentRating, $rating)){
                 $message = 'Pun has been rated';
-                header('Location: ?message='.$message);
-                
-            };
+            }
         }else{
             $message = 'You have already rated this pun';
-            header('Location: ?message='.$message);
         }
-        
+      }
+      else{
+        $message = 'You need to be logged in to vote';
+      }
+      
+      header('Location:' . $url . '&message='.$message);
         //if all clear then update the table to include your ip linked
         //with the correct id.
         

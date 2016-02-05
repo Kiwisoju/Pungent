@@ -71,33 +71,16 @@ $stylesheet = substr($url, 0, -4);
           </div>
           <hr class="left hr-fade">
             <ul class="nav navbar-nav">
+      				<li>
+      				  <a href="admin.php?action=topic" aria-haspopup="true">
+      				    <span>Topic</span>
+    				    </a>
+              </li>
               <li>
-                <a href="admin.php?action=challenges"  aria-haspopup="true">
-                  <span>Challenges</span>
+                <a href="admin.php?action=image-page" aria-haspopup="true">
+                  <span>Image</span>
                 </a>
-          			<ul class="dropdown navbar-nav nav">
-          				<li>
-          				  <a href="admin.php?action=topic" aria-haspopup="true">
-          				    <span>Topic</span>
-        				    </a>
-            				<ul class="dropdown navbar-nav nav">
-                      <li id="third-dropdown">
-                        <a href="admin.php?action=topic-archive">Archive</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <a href="admin.php?action=image-page" aria-haspopup="true">
-                      <span>Image</span>
-                    </a>
-                    <ul class="dropdown navbar-nav nav">
-                      <li id="third-dropdown">
-                        <a href="admin.php?action=image-archive">Archive</a>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-          		</li>
+              </li>
           		<li>
           		  <a href="admin.php?action=about">About</a>
         		  </li>

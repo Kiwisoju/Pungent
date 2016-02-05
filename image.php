@@ -6,7 +6,6 @@ if($_POST){
         // in the form set to what was previously entered.
         $data = $_POST;
         if(array_key_exists('delete', $data)){
-        //die(var_dump($data));
         $table = $data['table'];
         $id['id'] = $data['id'];
           if($databaseQueries->removePun($table, $id)){
@@ -20,9 +19,7 @@ if($_POST){
         $databaseQueries->addPun($data);}
     }
     if($_GET){
-  if($_GET['rating'] == 'up')
-  {
-    
+  if($_GET['rating'] == 'up'){
   $databaseQueries->ratePun();
   }elseif($_GET['rating'] == 'down'){
      $databaseQueries->ratePun();
@@ -49,12 +46,16 @@ if($_POST){
               <input type="text" class="form-control text-center" name="pun-image" value="<?= $data['pun-image']?>" placeholder="Post your pun here" required></input>
           </div>
            <input type="submit" class="btn btn-default">
-        </form>       
-        
-        <hr class="hr-fade">
-        
-         <?php
-         $totalPuns = $databaseQueries->totalPuns('image',$_GET['image']);
-         $databaseQueries->getPunsById($totalPuns,'image',$_GET['image']);
-
+        </form><?php
+        $totalPuns = $databaseQueries->totalPuns('image',$_GET['image']);
+        if($totalPuns == 0 ): ?>
+        <div>
+            <p>No one has submitted any puns yet!<br><br>
+                <strong>Be the first!</strong>
+            </p>
+        </div><?php
+        else: ?>
+        <hr class="hr-fade"><?php
+        $databaseQueries->getPunsById($totalPuns,'image',$_GET['image']);
+        endif;
 include('footer.php');

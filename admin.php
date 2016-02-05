@@ -12,20 +12,11 @@ switch($_GET['action']){
 	case 'home':
 		header('Location: index.php');
 		break;
-    case 'challenges':
-		header('Location: challenges.php');
-		break;
 	case 'topic':
 		header('Location: topic.php?topic='.$databaseQueries->getChallenge('topic_challenge')['topic_id']);
 		break;
-	case 'topic-archive':
-		header('Location: topic-archive.php');
-		break;
 	case 'image-page':
 		header('Location: image.php?image='.$databaseQueries->getChallenge('image_challenge')['image_id']);
-		break;
-	case 'image-archive':
-		header('Location: image-archive.php');
 		break;
 	case 'about':
 		header('Location: about.php');

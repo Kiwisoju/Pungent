@@ -48,13 +48,19 @@ if($_POST){
               <input type="text" class="form-control text-center" name="pun-topic" value="<?= $data['pun-topic']?>" placeholder="Post your pun here" required></input>
           </div>
            <input type="submit" class="btn btn-default">
-        </form>
-        
-        <hr class="hr-fade">
-        
-         <?php
-         $totalPuns = $databaseQueries->totalPuns('topic',$_GET['topic']);
-         $databaseQueries->getPunsById($totalPuns,'topic',$_GET['topic']);
+        </form><?php
+        $totalPuns = $databaseQueries->totalPuns('topic',$_GET['topic']);
+        // If there are no puns
+        if($totalPuns == 0): ?>
+        <div>
+            <p>No one has submitted any puns for this challenge yet!<br><br>
+                <strong>Be the first!</strong>
+            </p>
+        </div><?php
+        else: ?>
+        <hr class="hr-fade"><?php
+        $databaseQueries->getPunsById($totalPuns,'topic',$_GET['topic']);
+        endif;
 
 include('footer.php');
 ?>
