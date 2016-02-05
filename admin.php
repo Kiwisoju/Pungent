@@ -6,38 +6,39 @@ require_once('database-queries.php');
 $authenticator = new AuthenticatorHelper();
 $databaseQueries = new DatabaseQueries();
 if(!($authenticator->isAdmin() )){
-    header('Location: /home.php?not-admin=yes');
-   
+    header('Location: /index.php?not-admin=yes');
 }
-
 switch($_GET['action']){
-	case'home':
-		header('Location: home.php');
+	case 'home':
+		header('Location: index.php');
 		break;
-    case'challenges':
+    case 'challenges':
 		header('Location: challenges.php');
 		break;
-	case'topic':
+	case 'topic':
 		header('Location: topic.php?topic='.$databaseQueries->getChallenge('topic_challenge')['topic_id']);
 		break;
-	case'topic-archive':
+	case 'topic-archive':
 		header('Location: topic-archive.php');
 		break;
-	case'image-page':
+	case 'image-page':
 		header('Location: image.php?image='.$databaseQueries->getChallenge('image_challenge')['image_id']);
 		break;
-	case'image-archive':
+	case 'image-archive':
 		header('Location: image-archive.php');
 		break;
-	case'about':
+	case 'about':
 		header('Location: about.php');
 		break;
-	case'profile':
+	case 'profile':
 		header('Location: profile.php?username='.$_SESSION['username']);
 		break;
-	case'sitemap':
+	case 'sitemap':
 		header('Location: sitemap.php');
-		break;	
+		break;
+    case 'login':
+        header('Location: login.php');
+        break;
 }
     
 if($_POST){

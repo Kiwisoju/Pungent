@@ -1,15 +1,8 @@
 <?php
-// Require security helpers
-require_once('authenticator.php');
-$authenticator = new AuthenticatorHelper();
-// Secured content, redirect unauthenticated users
-$authenticator->redirectUnauthenticatedUser();
-//$db = new DatabaseHelper();
 include('header.php');
 ?>
  <!-- Page Content -->
     <div class="container page-content text-center">
-     
         <h2>Image Challenge Archive</h2>
             <form class="navbar-form" role="search" id="search-bar">
                 <div class="input-group">
@@ -36,7 +29,6 @@ include('header.php');
                         <?php
                         $databaseQueries->displayArchive('image');
                         ?>
-                        
                     </tbody>
                 </table>
             </div>

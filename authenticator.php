@@ -27,6 +27,7 @@ private $db;
 			if($user = $this->login($username, $password) ){
 				// $user being a user database row
 				$_SESSION['user'] = $user;
+				header('Location: index.php');
 			}else{
 				//user and password failed
 				$this->logout();

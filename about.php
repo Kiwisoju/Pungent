@@ -1,10 +1,4 @@
 <?php
-// Require security helpers
-require_once('authenticator.php');
-$authenticator = new AuthenticatorHelper();
-// Secured content, redirect unauthenticated users
-$authenticator->redirectUnauthenticatedUser();
-//$db = new DatabaseHelper();
 include('header.php');
 ?>
  <!-- Page Content -->
@@ -19,5 +13,5 @@ include('header.php');
           </p>
         </div>
 <?php
+echo 'potato';
 include('footer.php');
-?>

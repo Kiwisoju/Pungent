@@ -13,8 +13,4 @@ $(document).ready(function () {
       transition: '0.3s',
       scrolllock: true
     });
-    
-    
-   
-
 });

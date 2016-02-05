@@ -1,9 +1,4 @@
 <?php
-// Require security helpers
-require_once('authenticator.php');
-$authenticator = new AuthenticatorHelper();
-// Secured content, redirect unauthenticated users
-$authenticator->redirectUnauthenticatedUser();
 include('header.php');
 
 if($_POST){
@@ -12,7 +7,6 @@ if($_POST){
         $data = $_POST; 
         $databaseQueries->addPun($data);
     }
-
 ?>
 <!-- Page Content -->
 <div class="container page-content text-center">
@@ -44,4 +38,3 @@ if($_POST){
    
 <?php
 include('footer.php');
-?>

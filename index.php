@@ -1,29 +1,46 @@
 <?php
-require_once('authenticator.php');
 session_start();
-require_once __DIR__ . '/vendor/autoload.php';
-
-$fb = new Facebook\Facebook([
-  'app_id' => '469336573246700',
-  'app_secret' => '32c46b4268b6f882db3a6f2d1cdf3211',
-  'default_graph_version' => 'v2.2',
-]);
-
-$helper = $fb->getRedirectLoginHelper();
-$permissions = ['email']; // Optional permissions
-$loginUrl = $helper->getLoginUrl('http://glennforrest.co.nz/pungent/fb-callback.php', $permissions);
-
 include('header.php');
-$authenticator = new AuthenticatorHelper();
-if($authenticator->isAuthenticated()){
-  $message = "Welcome ".$_SESSION['username'];
-  header('Location: home.php?message='.$message);
-}?>
-
-<?php if($_GET['message']):?>
-  <div class="popup"><p><?= $_GET['message']?></p> </div>
-<?php endif; 
-
-include('footer.php');
-
 ?>
+<!-- Page Content -->
+    <div class="container page-content text-center">
+      <?php if($_GET['not-admin']=='yes'):?>
+        <div class="popup"><p>Sorry, you don't have permission to enter that page.</p> </div>
+      <?php elseif($_GET['message']):?>
+        <div class="popup"><p><?= $_GET['message']?></p> </div>
+      <?php elseif($_GET['pun']=='yes'):?>
+        <div class="popup"><p>Pun post successful!</p> </div>
+      <?php elseif($_GET['pun']=='no'): ?>
+        <div class="popup"><p>Pun post un-successful</p> </div>
+      <?php endif; ?>
+      <div class="pun-of-the-day">
+        <h2>Pun of the day</h2>
+        <p><?= $databaseQueries->punOfTheDay();?></p>
+      </div>
+      <hr class="hr-fade">
+      <div class="topic challenge">
+        <h2><a href="admin.php?action=topic">Topic Challenge #<?=$databaseQueries->getChallenge("topic_challenge")['topic_id'] ?><br><?= $databaseQueries->getChallenge("topic_challenge")['topic']?></a></h2>
+        <?php $databaseQueries->getCurrentPuns(3, 'topic');?>
+        <form class="pun-input" method="post">
+          <div class="form-group">
+              <input type="text" class="form-control text-center" name="pun-topic" value="<?= $data['pun-topic']?>" placeholder="Post your pun here" required></input>
+          </div>
+           <input type="submit" class="btn btn-default">
+        </form>
+      </div>
+      <hr class="hr-fade">
+      <div class="image challenge">
+        <h2><a href="admin.php?action=image-page">Image Challenge #<?= $databaseQueries->getChallenge("image_challenge")['image_id']?></a></h2>
+        <img class="grayscale img-responsive" src="<?=$databaseQueries->getChallenge("image_challenge")['image']?>"/>
+      <?php $databaseQueries->getCurrentPuns(3, 'image');?>
+        <form class="pun-input" method="post">
+          <div class="form-group">
+              <input type="text" class="form-control text-center" name="pun-image" value="<?= $data['pun-image']?>" placeholder="Post your pun here" required></input>
+          </div>
+           <input type="submit" class="btn btn-default">
+        </form>  
+      
+      </div>
+      <?php
+      include('footer.php');
+      ?>

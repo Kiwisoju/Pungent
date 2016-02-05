@@ -1,10 +1,4 @@
 <?php
-// Require security helpers
-require_once('authenticator.php');
-$authenticator = new AuthenticatorHelper();
-// Secured content, redirect unauthenticated users
-$authenticator->redirectUnauthenticatedUser();
-//$db = new DatabaseHelper();
 include('header.php');
 
 if($_POST){
@@ -64,4 +58,3 @@ if($_POST){
          $databaseQueries->getPunsById($totalPuns,'image',$_GET['image']);
 
 include('footer.php');
-?>
